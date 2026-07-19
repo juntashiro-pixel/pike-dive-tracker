@@ -93,9 +93,7 @@ const AAU_QUALIFYING = {
 };
 
 // ─── UPCOMING MEETS ──────────────────────────────────────────
-const UPCOMING_MEETS = [
-  { name: "AAU National Championships", date: "Jul 16–23, 2026", location: "Fort Lauderdale, FL", goal: true },
-];
+const UPCOMING_MEETS = [];
 
 // ─── TODAY'S MEET DIVE LIST (edit this each meet day) ────────
 // Pre-loads the Live Scoring calculator so you only enter judge scores.
