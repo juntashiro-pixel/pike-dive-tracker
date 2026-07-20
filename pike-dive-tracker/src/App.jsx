@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.7.3";
+const APP_VERSION = "v1.7.4";
 const APP_UPDATED = "Jul 20, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -786,20 +786,6 @@ export default function PikeDiveTracker() {
 
     return (
       <div>
-        {/* Diver Selector */}
-        <div style={{display:"flex",gap:8,marginBottom:16}}>
-          {Object.values(DIVERS).map(dv=>(
-            <button key={dv.id} onClick={()=>setActiveDiver(dv.id)} style={{
-              flex:1, padding:"14px 12px", borderRadius:12, border:`2px solid ${activeDiver===dv.id ? (dv.id==="hayden"?"#3b82f6":"#10b981") : theme.cardBorder}`,
-              background: activeDiver===dv.id ? (dv.id==="hayden"?"rgba(59,130,246,0.12)":"rgba(16,185,129,0.12)") : theme.card,
-              color: theme.text, cursor:"pointer", transition:"all 0.2s",
-            }}>
-              <div style={{fontWeight:700,fontSize:16}}>{dv.name.split(" ")[0]}</div>
-              <div style={{fontSize:11,color:theme.textMuted,marginTop:2}}>{dv.ageGroupLabel}</div>
-            </button>
-          ))}
-        </div>
-
         {/* Stats Cards */}
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:12}}>
           <div style={{...cardStyle,textAlign:"center"}}>
