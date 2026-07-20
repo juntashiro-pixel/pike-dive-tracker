@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.6.0";
+const APP_VERSION = "v1.6.2";
 const APP_UPDATED = "Jul 20, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -135,6 +135,8 @@ const DIVERS = {
       {meet:"2026 AAU Nationals", date:"2026-07-16", event:"Synchro 1M", height:"1M", round:"final", place:9, score:104.85, partner:"Anthony Luzzi"},
       {meet:"2026 AAU Nationals", date:"2026-07-17", event:"Synchro 3M", height:"3M", round:"final", place:13, score:88.45, partner:"Gale Tashiro"},
       {meet:"2026 AAU Nationals", date:"2026-07-17", event:"Synchro 3M", height:"3M", round:"final", place:14, score:88.20, partner:"Anthony Luzzi"},
+      {meet:"2025 AAU Nationals", date:"2025-07-15", event:"Synchro 1M", height:"1M", round:"final", place:13, score:74.20, partner:""},
+      {meet:"2025 AAU Nationals", date:"2025-07-16", event:"Synchro 3M", height:"3M", round:"final", place:11, score:85.95, partner:""},
     ],
     finaAge: 12, ageGroup: "C", ageGroupLabel: "Group C Boys (12-13)",
     qualifying: {
@@ -203,6 +205,8 @@ const DIVERS = {
     synchroHistory: [
       {meet:"2026 AAU Nationals", date:"2026-07-16", event:"Synchro 1M", height:"1M", round:"final", place:11, score:97.25, partner:"Coulton Woodford"},
       {meet:"2026 AAU Nationals", date:"2026-07-17", event:"Synchro 3M", height:"3M", round:"final", place:13, score:88.45, partner:"Hayden Tashiro"},
+      {meet:"2025 AAU Nationals", date:"2025-07-15", event:"Synchro 1M", height:"1M", round:"final", place:8, score:110.50, partner:""},
+      {meet:"2025 AAU Nationals", date:"2025-07-16", event:"Synchro 3M", height:"3M", round:"final", place:12, score:84.25, partner:""},
     ],
     finaAge: 9, ageGroup: "E", ageGroupLabel: "Group E Boys (9 & Under)",
     qualifying: {
@@ -1048,6 +1052,63 @@ export default function PikeDiveTracker() {
       .filter(([code, info]) => code.toLowerCase().includes(ddLookup.toLowerCase()) || info.name.toLowerCase().includes(ddLookup.toLowerCase()))
       .slice(0, 6) : [];
 
+    const exportScoutingSheet = () => {
+      const mh = diver.meetHistory || [], sh = diver.synchroHistory || [];
+      const gradYear=(diver.birthYear||2007)+18;
+      const ord=p=>p===1?"st":p===2?"nd":p===3?"rd":"th";
+      const aaInd=mh.filter(m=>/AAU Nationals/i.test(m.meet)&&m.round==="final"&&typeof m.place==="number"&&m.place<=12).map(m=>({...m,kind:"ind"}));
+      const aaSyn=sh.filter(m=>/AAU Nationals/i.test(m.meet)&&m.round==="final"&&typeof m.place==="number"&&m.place<=6).map(m=>({...m,kind:"syn"}));
+      const aa=[...aaInd,...aaSyn].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+      const podium=mh.filter(m=>typeof m.place==="number"&&m.place<=3); const wins=podium.filter(m=>m.place===1).length;
+      const s1=mh.filter(m=>m.height==="1M"), s3=mh.filter(m=>m.height==="3M");
+      const pb1=s1.length?s1.reduce((a,b)=>b.score>a.score?b:a):null; const pb3=s3.length?s3.reduce((a,b)=>b.score>a.score?b:a):null;
+      const consD=(diver.diveStats||[]).filter(x=>x.times>=3&&x.highScore>0);
+      const consistency=consD.length?Math.round(consD.reduce((a,x)=>a+x.avgScore/x.highScore,0)/consD.length*100):null;
+      const boards=[...new Set(mh.map(m=>m.height))].filter(Boolean);
+      const dl=DIVELIVE_RESULTS.filter(r=>r.diverId===diver.id&&r.dives);
+      const byYear={}; dl.forEach(r=>{const y=(r.date||"").slice(0,4);if(!y)return;r.dives.forEach(d=>{(byYear[y]=byYear[y]||[]).push(d.dd);});});
+      const ddTrend=Object.keys(byYear).sort().map(y=>({y,dd:byYear[y].reduce((a,b)=>a+b,0)/byYear[y].length}));
+      const topDives=(diver.diveStats||[]).filter(x=>DD_TABLE[x.dive]).map(x=>({...x,dd:DD_TABLE[x.dive]?.[x.height]||0,nm:DD_TABLE[x.dive]?.name})).sort((a,b)=>b.highScore-a.highScore).slice(0,8);
+      const results=[...mh].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,14);
+      const today=new Date().toISOString().slice(0,10);
+      const html=`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${diver.name} - Recruiting Profile</title><style>
+        *{box-sizing:border-box;margin:0;padding:0} body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#1a1a2e;padding:20px;max-width:760px;margin:0 auto;font-size:12px}
+        .tip{background:#eef6ff;border:1px solid #cfe4ff;border-radius:6px;padding:8px 12px;margin-bottom:14px;font-size:11px;color:#1a5276;text-align:center}
+        .hd{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #1e3a8a;padding-bottom:8px;margin-bottom:6px}
+        h1{font-size:22px;color:#1e3a8a} .sub{color:#555;font-size:11px;margin-top:2px} .rt{text-align:right;font-size:11px;color:#333;line-height:1.5}
+        .sec{font-size:11px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 6px;border-bottom:1px solid #ddd;padding-bottom:3px}
+        .aa{display:inline-block;background:#fff7e6;border:1px solid #f0c36d;color:#a9741a;border-radius:6px;padding:3px 8px;font-weight:700;font-size:11px;margin:0 5px 5px 0}
+        .aas{background:#e6fbff;border-color:#77aacc;color:#0b7d92}
+        .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px} .stat{border:1px solid #e3e3ee;border-radius:8px;padding:8px;text-align:center}
+        .stat .l{font-size:9px;color:#888;text-transform:uppercase} .stat .v{font-size:20px;font-weight:800;color:#1e3a8a} .stat .s{font-size:8px;color:#999}
+        table{width:100%;border-collapse:collapse;font-size:11px} th{text-align:left;color:#888;font-size:9px;text-transform:uppercase;border-bottom:1px solid #ddd;padding:4px} td{padding:4px;border-bottom:1px solid #f0f0f0}
+        .r{text-align:right} .footer{margin-top:16px;font-size:9px;color:#aaa;text-align:center}
+        @media print{.no-print{display:none!important}@page{size:letter;margin:.4in}}
+      </style></head><body>
+      <div class="tip no-print">To save or share: tap the <b>Share</b> icon in Safari, then <b>Print</b>, then Share the PDF.</div>
+      <div class="hd"><div><h1>${diver.name}</h1><div class="sub">College Recruiting Profile &middot; Class of ${gradYear}</div><div class="sub">Pike Dive Academy &middot; Coach Dora Fyfe &middot; DiveMeets #${diver.diveMeetsNum}</div></div>
+        <div class="rt">FINA Age ${diver.finaAge}<br/>${diver.ageGroupLabel}<br/>Boards: ${boards.join(" &middot; ")||"—"}</div></div>
+      <div class="sec">Honors &mdash; AAU All-American${aa.length?` (&times; ${aa.length})`:""}</div>
+      <div>${aa.length? aa.map(m=>`<span class="aa ${m.kind==="syn"?"aas":""}">${(m.date||"").slice(0,4)} &middot; ${m.height}${m.kind==="syn"?" Synchro":""} &middot; ${m.place}${ord(m.place)} place</span>`).join("") : '<span style="color:#888">Working toward it — top 12 individual final or top 6 synchro final at AAU Nationals.</span>'}</div>
+      <div class="sec">Key Stats</div>
+      <div class="grid">
+        <div class="stat"><div class="l">Best 1M</div><div class="v">${pb1?pb1.score.toFixed(1):"—"}</div><div class="s">${pb1?pb1.meet:""}</div></div>
+        <div class="stat"><div class="l">Best 3M</div><div class="v">${pb3?pb3.score.toFixed(1):"—"}</div><div class="s">${pb3?pb3.meet:""}</div></div>
+        <div class="stat"><div class="l">Podiums</div><div class="v">${podium.length}</div><div class="s">${wins} win${wins===1?"":"s"}</div></div>
+        <div class="stat"><div class="l">Consistency</div><div class="v">${consistency!=null?consistency+"%":"—"}</div><div class="s">avg vs best</div></div>
+      </div>
+      ${ddTrend.length>=2?`<div class="sec">Difficulty Progression (avg DD by year)</div><div style="font-size:14px">${ddTrend.map(t=>`<b>${t.y}</b> ${t.dd.toFixed(2)}`).join(" &nbsp;&rarr;&nbsp; ")}</div>`:""}
+      <div class="sec">Top Dives</div>
+      <table><thead><tr><th>Dive</th><th>Description</th><th>Board</th><th class="r">DD</th><th class="r">Best</th></tr></thead><tbody>
+      ${topDives.map(x=>`<tr><td><b>${x.dive}</b></td><td>${x.nm||""}</td><td>${x.height}</td><td class="r">${x.dd}</td><td class="r"><b>${x.highScore.toFixed(1)}</b></td></tr>`).join("")}</tbody></table>
+      <div class="sec">Competition Results</div>
+      <table><thead><tr><th>Meet</th><th>Event</th><th>Date</th><th class="r">Place</th><th class="r">Score</th></tr></thead><tbody>
+      ${results.map(m=>`<tr><td>${m.meet}</td><td>${m.event||""}${m.round&&m.round!=="single"?` (${m.round})`:""}</td><td>${m.date||""}</td><td class="r">${typeof m.place==="number"?m.place+ord(m.place):(m.place||"")}</td><td class="r">${m.score}</td></tr>`).join("")}</tbody></table>
+      <div class="footer">Generated ${today} &middot; Pike Dive Tracker</div>
+      </body></html>`;
+      const blob=new Blob([html],{type:'text/html'}); const url=URL.createObjectURL(blob); window.open(url,'_blank');
+    };
+
     return (
       <div>
         {(() => {
@@ -1116,6 +1177,7 @@ export default function PikeDiveTracker() {
                   <span style={{fontSize:13,fontWeight:800,color:theme.gold,width:42,textAlign:"right",flexShrink:0}}>{x.highScore.toFixed(1)}</span>
                 </div>))}
               </div>)}
+              <button onClick={exportScoutingSheet} style={{width:"100%",marginTop:6,padding:"9px",borderRadius:9,border:`1px solid ${theme.accent}66`,background:`${theme.accent}18`,color:theme.accent,fontWeight:700,fontSize:12,cursor:"pointer"}}>📄 Export one-page recruiting profile</button>
               <div style={{fontSize:8,color:theme.textMuted,marginTop:8,fontStyle:"italic",textAlign:"center"}}>Updates automatically as new results are added.</div>
             </div>
           );
