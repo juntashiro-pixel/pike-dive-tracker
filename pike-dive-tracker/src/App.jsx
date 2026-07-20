@@ -101,36 +101,36 @@ const TODAY_DIVE_LIST = null; // no meet loaded — Live Scoring opens blank
 
 // ─── DIVELIVE IMPORT (AAU Nationals + CMD meets) ──────────────
 const DIVELIVE_RESULTS = [
-  {diverId:"gale",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys 9 and under 1M Finals",height:"1M",round:"final",place:10,score:117.6,source:"divelive",dives:[{code:"101A",dd:1.4,net:10.5,award:14.7,role:"vol"},{code:"201A",dd:1.7,net:11.0,award:18.7,role:"vol"},{code:"5211A",dd:1.8,net:10.0,award:18.0,role:"vol"},{code:"202C",dd:1.5,net:7.5,award:11.25,role:"opt"}]},
-  {diverId:"gale",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys 9 and under 1M",height:"1M",round:"prelim",place:11,score:69.95,source:"divelive",dives:[{code:"101A",dd:1.4,net:12.5,award:17.5,role:"vol"},{code:"201A",dd:1.7,net:12.5,award:21.25,role:"vol"},{code:"5211A",dd:1.8,net:9.0,award:16.2,role:"vol"},{code:"202C",dd:1.5,net:10.0,award:15.0,role:"opt"}]},
+  {diverId:"gale",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys 9 & Under 1M",height:"1M",round:"final",place:10,score:117.6,source:"divelive",dives:[{code:"101A",dd:1.4,net:10.5,award:14.7,role:"vol"},{code:"201A",dd:1.7,net:11.0,award:18.7,role:"vol"},{code:"5211A",dd:1.8,net:10.0,award:18.0,role:"vol"},{code:"202C",dd:1.5,net:7.5,award:11.25,role:"opt"}]},
+  {diverId:"gale",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys 9 & Under 1M",height:"1M",round:"prelim",place:11,score:69.95,source:"divelive",dives:[{code:"101A",dd:1.4,net:12.5,award:17.5,role:"vol"},{code:"201A",dd:1.7,net:12.5,award:21.25,role:"vol"},{code:"5211A",dd:1.8,net:9.0,award:16.2,role:"vol"},{code:"202C",dd:1.5,net:10.0,award:15.0,role:"opt"}]},
   {diverId:"gale",meet:"2024 CMD Fall",date:"2024-11-24",event:"Novice 9 and under Boys 1M",height:"1M",round:"single",place:1,score:96.5,source:"divelive",dives:[{code:"101A",dd:1.4,net:17.0,award:23.8,role:"opt"},{code:"201A",dd:1.7,net:17.0,award:28.9,role:"opt"},{code:"102C",dd:1.4,net:17.0,award:23.8,role:"opt"},{code:"002A",dd:1.0,net:20.0,award:20.0,role:"opt"}]},
   {diverId:"gale",meet:"2025 CMD Spring",date:"2025-04-05",event:"9 and under Boys 1M",height:"1M",round:"single",place:2,score:84.4,source:"divelive",dives:[{code:"101A",dd:1.4,net:14.0,award:19.6,role:"vol"},{code:"201A",dd:1.7,net:13.0,award:22.1,role:"vol"},{code:"401C",dd:1.4,net:16.5,award:23.1,role:"vol"},{code:"102C",dd:1.4,net:14.0,award:19.6,role:"opt"}]},
-  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-15",event:"9 and under Boys 1M Finals",height:"1M",round:"final",place:8,score:68.2,source:"divelive",dives:[{code:"101A",dd:1.4,net:13.0,award:18.2,role:"vol"},{code:"201A",dd:1.7,net:13.0,award:22.1,role:"vol"},{code:"5211A",dd:1.8,net:5.5,award:9.9,role:"vol"},{code:"202C",dd:1.5,net:12.0,award:18.0,role:"opt"}]},
-  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-15",event:"9 and under Boys 1M Prelims",height:"1M",round:"prelim",place:10,score:68.7,source:"divelive",dives:[{code:"101A",dd:1.4,net:11.0,award:15.4,role:"vol"},{code:"201A",dd:1.7,net:10.0,award:17.0,role:"vol"},{code:"5211A",dd:1.8,net:11.0,award:19.8,role:"vol"},{code:"202C",dd:1.5,net:11.0,award:16.5,role:"opt"}]},
-  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-16",event:"9 and under Boys 3M Finals",height:"3M",round:"final",place:9,score:71.45,source:"divelive",dives:[{code:"101A",dd:1.6,net:11.0,award:17.6,role:"vol"},{code:"201A",dd:1.9,net:12.0,award:22.8,role:"vol"},{code:"401C",dd:1.3,net:13.5,award:17.55,role:"vol"},{code:"102C",dd:1.5,net:9.0,award:13.5,role:"opt"}]},
-  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-16",event:"9 and under Boys 3M Prelims",height:"3M",round:"prelim",place:8,score:72.6,source:"divelive",dives:[{code:"101A",dd:1.6,net:11.5,award:18.4,role:"vol"},{code:"201A",dd:1.9,net:14.0,award:26.6,role:"vol"},{code:"401C",dd:1.3,net:12.0,award:15.6,role:"vol"},{code:"5211A",dd:2.0,net:6.0,award:12.0,role:"opt"}]},
+  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-15",event:"Boys 9 & Under 1M",height:"1M",round:"final",place:8,score:68.2,source:"divelive",dives:[{code:"101A",dd:1.4,net:13.0,award:18.2,role:"vol"},{code:"201A",dd:1.7,net:13.0,award:22.1,role:"vol"},{code:"5211A",dd:1.8,net:5.5,award:9.9,role:"vol"},{code:"202C",dd:1.5,net:12.0,award:18.0,role:"opt"}]},
+  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-15",event:"Boys 9 & Under 1M",height:"1M",round:"prelim",place:10,score:68.7,source:"divelive",dives:[{code:"101A",dd:1.4,net:11.0,award:15.4,role:"vol"},{code:"201A",dd:1.7,net:10.0,award:17.0,role:"vol"},{code:"5211A",dd:1.8,net:11.0,award:19.8,role:"vol"},{code:"202C",dd:1.5,net:11.0,award:16.5,role:"opt"}]},
+  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-16",event:"Boys 9 & Under 3M",height:"3M",round:"final",place:9,score:71.45,source:"divelive",dives:[{code:"101A",dd:1.6,net:11.0,award:17.6,role:"vol"},{code:"201A",dd:1.9,net:12.0,award:22.8,role:"vol"},{code:"401C",dd:1.3,net:13.5,award:17.55,role:"vol"},{code:"102C",dd:1.5,net:9.0,award:13.5,role:"opt"}]},
+  {diverId:"gale",meet:"2025 AAU Nationals",date:"2025-07-16",event:"Boys 9 & Under 3M",height:"3M",round:"prelim",place:8,score:72.6,source:"divelive",dives:[{code:"101A",dd:1.6,net:11.5,award:18.4,role:"vol"},{code:"201A",dd:1.9,net:14.0,award:26.6,role:"vol"},{code:"401C",dd:1.3,net:12.0,award:15.6,role:"vol"},{code:"5211A",dd:2.0,net:6.0,award:12.0,role:"opt"}]},
   {diverId:"gale",meet:"2026 CMD Spring",date:"2026-04-11",event:"9 and under Boys 1M",height:"1M",round:"single",place:2,score:83.8,source:"divelive",dives:[{code:"101A",dd:1.4,net:17.5,award:24.5,role:"vol"},{code:"201A",dd:1.7,net:17.0,award:28.9,role:"vol"},{code:"5211A",dd:1.8,net:0.0,award:0.0,role:"vol"},{code:"5122D",dd:1.9,net:16.0,award:30.4,role:"opt"}]},
   {diverId:"gale",meet:"2026 CMD Spring",date:"2026-04-11",event:"9 and under Boys 3M",height:"3M",round:"single",place:1,score:78.0,source:"divelive",dives:[{code:"101A",dd:1.6,net:14.0,award:22.4,role:"vol"},{code:"201A",dd:1.9,net:14.0,award:26.6,role:"vol"},{code:"401C",dd:1.3,net:0.0,award:0.0,role:"vol"},{code:"5211A",dd:2.0,net:14.5,award:29.0,role:"opt"}]},
-  {diverId:"hayden",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys D1 10 years old 1M",height:"1M",round:"final",place:6,score:92.0,source:"divelive",dives:[{code:"101C",dd:1.2,net:12.5,award:15.0,role:"vol"},{code:"201A",dd:1.7,net:12.5,award:21.25,role:"vol"},{code:"401C",dd:1.4,net:15.0,award:21.0,role:"vol"},{code:"102C",dd:1.4,net:12.5,award:17.5,role:"opt"},{code:"202C",dd:1.5,net:11.5,award:17.25,role:"opt"}]},
-  {diverId:"hayden",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys D1 10 years old 1M",height:"1M",round:"prelim",place:3,score:94.85,source:"divelive",dives:[{code:"101C",dd:1.2,net:12.5,award:15.0,role:"vol"},{code:"201A",dd:1.7,net:12.5,award:21.25,role:"vol"},{code:"401C",dd:1.4,net:15.0,award:21.0,role:"vol"},{code:"102C",dd:1.4,net:14.0,award:19.6,role:"opt"},{code:"202C",dd:1.5,net:12.0,award:18.0,role:"opt"}]},
+  {diverId:"hayden",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys 10 1M",height:"1M",round:"final",place:6,score:92.0,source:"divelive",dives:[{code:"101C",dd:1.2,net:12.5,award:15.0,role:"vol"},{code:"201A",dd:1.7,net:12.5,award:21.25,role:"vol"},{code:"401C",dd:1.4,net:15.0,award:21.0,role:"vol"},{code:"102C",dd:1.4,net:12.5,award:17.5,role:"opt"},{code:"202C",dd:1.5,net:11.5,award:17.25,role:"opt"}]},
+  {diverId:"hayden",meet:"2024 AAU Nationals",date:"2024-07-15",event:"Boys 10 1M",height:"1M",round:"prelim",place:3,score:94.85,source:"divelive",dives:[{code:"101C",dd:1.2,net:12.5,award:15.0,role:"vol"},{code:"201A",dd:1.7,net:12.5,award:21.25,role:"vol"},{code:"401C",dd:1.4,net:15.0,award:21.0,role:"vol"},{code:"102C",dd:1.4,net:14.0,award:19.6,role:"opt"},{code:"202C",dd:1.5,net:12.0,award:18.0,role:"opt"}]},
   {diverId:"hayden",meet:"2024 CMD Fall",date:"2024-11-24",event:"10-11 Boys 1M",height:"1M",round:"single",place:2,score:136.2,source:"divelive",dives:[{code:"101C",dd:1.2,net:17.5,award:21.0,role:"vol"},{code:"201A",dd:1.7,net:17.0,award:28.9,role:"vol"},{code:"401C",dd:1.4,net:20.0,award:28.0,role:"vol"},{code:"102C",dd:1.4,net:18.5,award:25.9,role:"opt"},{code:"5211A",dd:1.8,net:18.0,award:32.4,role:"opt"}]},
   {diverId:"hayden",meet:"2025 CMD Spring",date:"2025-04-05",event:"10-11 Boys 1M",height:"1M",round:"single",place:2,score:120.4,source:"divelive",dives:[{code:"102C",dd:1.4,net:18.0,award:25.2,role:"vol"},{code:"201A",dd:1.7,net:18.0,award:30.6,role:"vol"},{code:"401C",dd:1.4,net:14.0,award:19.6,role:"vol"},{code:"5211A",dd:1.8,net:12.5,award:22.5,role:"opt"},{code:"202C",dd:1.5,net:15.0,award:22.5,role:"opt"}]},
   {diverId:"hayden",meet:"2025 CMD Spring",date:"2025-04-05",event:"10-11 Boys 3M",height:"3M",round:"single",place:2,score:109.55,source:"divelive",dives:[{code:"101A",dd:1.6,net:17.0,award:27.2,role:"vol"},{code:"5211A",dd:2.0,net:15.0,award:30.0,role:"vol"},{code:"401C",dd:1.3,net:7.5,award:9.75,role:"vol"},{code:"102C",dd:1.5,net:14.0,award:21.0,role:"opt"},{code:"202C",dd:1.6,net:13.5,award:21.6,role:"opt"}]},
-  {diverId:"hayden",meet:"2025 AAU Nationals",date:"2025-07-15",event:"Boys D2 11 years old 3M",height:"3M",round:"prelim",place:14,score:84.15,source:"divelive",dives:[{code:"101A",dd:1.6,net:12.5,award:20.0,role:"vol"},{code:"201A",dd:1.9,net:10.0,award:19.0,role:"vol"},{code:"401C",dd:1.3,net:11.5,award:14.95,role:"vol"},{code:"5211A",dd:2.0,net:7.5,award:15.0,role:"opt"},{code:"202C",dd:1.6,net:9.5,award:15.2,role:"opt"}]},
-  {diverId:"hayden",meet:"2025 AAU Nationals",date:"2025-07-16",event:"Boys D2 11 years old 1M",height:"1M",round:"prelim",place:15,score:87.55,source:"divelive",dives:[{code:"101A",dd:1.4,net:11.5,award:16.1,role:"vol"},{code:"201A",dd:1.7,net:11.5,award:19.55,role:"vol"},{code:"401C",dd:1.4,net:11.0,award:15.4,role:"vol"},{code:"103C",dd:1.6,net:11.0,award:17.6,role:"opt"},{code:"5211A",dd:1.8,net:10.5,award:18.9,role:"opt"}]},
+  {diverId:"hayden",meet:"2025 AAU Nationals",date:"2025-07-15",event:"Boys 11 3M",height:"3M",round:"prelim",place:14,score:84.15,source:"divelive",dives:[{code:"101A",dd:1.6,net:12.5,award:20.0,role:"vol"},{code:"201A",dd:1.9,net:10.0,award:19.0,role:"vol"},{code:"401C",dd:1.3,net:11.5,award:14.95,role:"vol"},{code:"5211A",dd:2.0,net:7.5,award:15.0,role:"opt"},{code:"202C",dd:1.6,net:9.5,award:15.2,role:"opt"}]},
+  {diverId:"hayden",meet:"2025 AAU Nationals",date:"2025-07-16",event:"Boys 11 1M",height:"1M",round:"prelim",place:15,score:87.55,source:"divelive",dives:[{code:"101A",dd:1.4,net:11.5,award:16.1,role:"vol"},{code:"201A",dd:1.7,net:11.5,award:19.55,role:"vol"},{code:"401C",dd:1.4,net:11.0,award:15.4,role:"vol"},{code:"103C",dd:1.6,net:11.0,award:17.6,role:"opt"},{code:"5211A",dd:1.8,net:10.5,award:18.9,role:"opt"}]},
   {diverId:"hayden",meet:"2026 CMD Spring",date:"2026-04-11",event:"12-13 Boys 1M",height:"1M",round:"single",place:3,score:179.35,source:"divelive",dives:[{code:"101A",dd:1.4,net:15.5,award:21.7,role:"vol"},{code:"201A",dd:1.7,net:13.0,award:22.1,role:"vol"},{code:"301C",dd:1.6,net:10.0,award:16.0,role:"vol"},{code:"401C",dd:1.4,net:14.5,award:20.3,role:"vol"},{code:"5211A",dd:1.8,net:14.0,award:25.2,role:"vol"},{code:"102C",dd:1.4,net:15.0,award:21.0,role:"opt"},{code:"202C",dd:1.5,net:17.0,award:25.5,role:"opt"},{code:"5122D",dd:1.9,net:14.5,award:27.55,role:"opt"}]},
   {diverId:"hayden",meet:"JDA Summer Invite 2026",date:"2026-06-13",event:"Group C Boys 1m (12-13)",height:"1M",round:"single",place:3,score:243.20,source:"divelive",dives:[{code:"103C",dd:1.6,net:18.00,award:28.80,role:"vol"},{code:"201A",dd:1.7,net:20.50,award:34.85,role:"vol"},{code:"401C",dd:1.4,net:21.00,award:29.40,role:"vol"},{code:"301C",dd:1.6,net:17.50,award:28.00,role:"vol"},{code:"5211A",dd:1.8,net:19.00,award:34.20,role:"vol"},{code:"102A",dd:1.6,net:18.50,award:29.60,role:"opt"},{code:"202C",dd:1.5,net:18.00,award:27.00,role:"opt"},{code:"5122D",dd:1.9,net:16.50,award:31.35,role:"opt"}]},
-  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-16",event:"9 and under Boys 1M Prelims",height:"1M",round:"prelim",place:10,score:64.10,source:"divelive",dives:[{code:"103C",dd:1.6,net:11.00,award:17.60,role:"vol"},{code:"5211A",dd:1.8,net:4.00,award:7.20,role:"vol"},{code:"201A",dd:1.7,net:12.50,award:21.25,role:"vol"},{code:"5122D",dd:1.9,net:9.50,award:18.05,role:"opt"}]},
-  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-16",event:"9 and under Boys 1M Finals",height:"1M",round:"final",place:5,score:86.70,source:"divelive",dives:[{code:"103C",dd:1.6,net:14.50,award:23.20,role:"vol"},{code:"5211A",dd:1.8,net:12.50,award:22.50,role:"vol"},{code:"201A",dd:1.7,net:13.50,award:22.95,role:"vol"},{code:"5122D",dd:1.9,net:9.50,award:18.05,role:"opt"}]},
-  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-17",event:"9 and under Boys 3M Prelims",height:"3M",round:"prelim",place:9,score:68.10,source:"divelive",dives:[{code:"101C",dd:1.4,net:11.00,award:15.40,role:"vol"},{code:"201A",dd:1.9,net:11.50,award:21.85,role:"vol"},{code:"401C",dd:1.3,net:14.50,award:18.85,role:"vol"},{code:"5211A",dd:2.0,net:6.00,award:12.00,role:"opt"}]},
-  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-17",event:"9 and under Boys 3M Finals",height:"3M",round:"final",place:9,score:74.05,source:"divelive",dives:[{code:"101C",dd:1.4,net:13.00,award:18.20,role:"vol"},{code:"201A",dd:1.9,net:9.50,award:18.05,role:"vol"},{code:"401C",dd:1.3,net:16.00,award:20.80,role:"vol"},{code:"5211A",dd:2.0,net:8.50,award:17.00,role:"opt"}]},
-  {diverId:"hayden",meet:"2026 AAU Nationals",date:"2026-07-16",event:"Boys 12 1M Prelims",height:"1M",round:"prelim",place:17,score:134.40,source:"divelive",dives:[{code:"201A",dd:1.7,net:14.00,award:23.80,role:"vol"},{code:"401C",dd:1.4,net:14.50,award:20.30,role:"vol"},{code:"301C",dd:1.6,net:8.50,award:13.60,role:"vol"},{code:"5211A",dd:1.8,net:10.50,award:18.90,role:"vol"},{code:"102A",dd:1.6,net:11.50,award:18.40,role:"vol"},{code:"202C",dd:1.5,net:6.50,award:9.75,role:"opt"},{code:"5122D",dd:1.9,net:5.50,award:10.45,role:"opt"},{code:"103C",dd:1.6,net:12.00,award:19.20,role:"opt"}]},
+  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-16",event:"Boys 9 & Under 1M",height:"1M",round:"prelim",place:10,score:64.10,source:"divelive",dives:[{code:"103C",dd:1.6,net:11.00,award:17.60,role:"vol"},{code:"5211A",dd:1.8,net:4.00,award:7.20,role:"vol"},{code:"201A",dd:1.7,net:12.50,award:21.25,role:"vol"},{code:"5122D",dd:1.9,net:9.50,award:18.05,role:"opt"}]},
+  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-16",event:"Boys 9 & Under 1M",height:"1M",round:"final",place:5,score:86.70,source:"divelive",dives:[{code:"103C",dd:1.6,net:14.50,award:23.20,role:"vol"},{code:"5211A",dd:1.8,net:12.50,award:22.50,role:"vol"},{code:"201A",dd:1.7,net:13.50,award:22.95,role:"vol"},{code:"5122D",dd:1.9,net:9.50,award:18.05,role:"opt"}]},
+  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-17",event:"Boys 9 & Under 3M",height:"3M",round:"prelim",place:9,score:68.10,source:"divelive",dives:[{code:"101C",dd:1.4,net:11.00,award:15.40,role:"vol"},{code:"201A",dd:1.9,net:11.50,award:21.85,role:"vol"},{code:"401C",dd:1.3,net:14.50,award:18.85,role:"vol"},{code:"5211A",dd:2.0,net:6.00,award:12.00,role:"opt"}]},
+  {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-17",event:"Boys 9 & Under 3M",height:"3M",round:"final",place:9,score:74.05,source:"divelive",dives:[{code:"101C",dd:1.4,net:13.00,award:18.20,role:"vol"},{code:"201A",dd:1.9,net:9.50,award:18.05,role:"vol"},{code:"401C",dd:1.3,net:16.00,award:20.80,role:"vol"},{code:"5211A",dd:2.0,net:8.50,award:17.00,role:"opt"}]},
+  {diverId:"hayden",meet:"2026 AAU Nationals",date:"2026-07-16",event:"Boys 12 1M",height:"1M",round:"prelim",place:17,score:134.40,source:"divelive",dives:[{code:"201A",dd:1.7,net:14.00,award:23.80,role:"vol"},{code:"401C",dd:1.4,net:14.50,award:20.30,role:"vol"},{code:"301C",dd:1.6,net:8.50,award:13.60,role:"vol"},{code:"5211A",dd:1.8,net:10.50,award:18.90,role:"vol"},{code:"102A",dd:1.6,net:11.50,award:18.40,role:"vol"},{code:"202C",dd:1.5,net:6.50,award:9.75,role:"opt"},{code:"5122D",dd:1.9,net:5.50,award:10.45,role:"opt"},{code:"103C",dd:1.6,net:12.00,award:19.20,role:"opt"}]},
 ];
 
 // ─── DIVER DATA ──────────────────────────────────────────────
 const DIVERS = {
   hayden: {
-    id: "hayden", name: "Hayden Tashiro", diveMeetsNum: 80986,
+    id: "hayden", name: "Hayden Tashiro", diveMeetsNum: 80986, birthYear: 2014,
     finaAge: 12, ageGroup: "C", ageGroupLabel: "Group C Boys (12-13)",
     qualifying: {
       "1M": { score: 210, dives: 8 },
@@ -194,7 +194,7 @@ const DIVERS = {
     ]
   },
   gale: {
-    id: "gale", name: "Gale Tashiro", diveMeetsNum: 152421,
+    id: "gale", name: "Gale Tashiro", diveMeetsNum: 152421, birthYear: 2017,
     finaAge: 9, ageGroup: "E", ageGroupLabel: "Group E Boys (9 & Under)",
     qualifying: {
       "1M": { score: null, note: "No minimum (coach discretion)" },
@@ -459,6 +459,7 @@ const MiniDiveAdder = ({onAdd, placeholder, theme}) => {
 export default function PikeDiveTracker() {
   const [activeDiver, setActiveDiver] = useState("hayden");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [practiceView, setPracticeView] = useState("log");
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
   const [heightFilter, setHeightFilter] = useState("ALL");
   const [showAddPractice, setShowAddPractice] = useState(false);
@@ -850,58 +851,62 @@ export default function PikeDiveTracker() {
           </div>
         </div>
 
-        {/* Qualifying Progress for divers with score targets */}
-        {d.qualifying?.["1M"]?.score && (
-          <div style={cardStyle}>
-            <div style={{fontSize:13,fontWeight:700,color:theme.text,marginBottom:8}}>
-              <Icon type="target" size={14}/> AAU Nationals Qualifying
-            </div>
-            {["1M","3M"].map(h=>{
-              const best = h==="1M" ? best1M : best3M;
-              const target = d.qualifying[h].score;
-              const numDives = d.qualifying[h].dives;
-              const pct = Math.min(100, (best/target)*100);
-              const qualified = best >= target;
-              return (
-                <div key={h} style={{marginBottom:10}}>
-                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}}>
-                    <span style={{fontSize:12,fontWeight:600,color:theme.text}}>{h}</span>
-                    <span style={{fontSize:11,color: qualified ? theme.success : theme.textMuted}}>
-                      {best.toFixed(1)} / {target} {qualified ? "✓ QUALIFIED" : `(${(target-best).toFixed(1)} to go)`}
-                    </span>
-                  </div>
-                  <div style={{height:7,background:theme.surface,borderRadius:4,overflow:"hidden"}}>
-                    <div style={{
-                      height:"100%", borderRadius:4, transition:"width 0.5s",
-                      width:`${pct}%`,
-                      background: qualified ? `linear-gradient(90deg,${theme.success},#34d399)` : `linear-gradient(90deg,${theme.accent},#60a5fa)`,
-                    }}/>
-                  </div>
-                  <div style={{fontSize:9,color:theme.textMuted,marginTop:2}}>
-                    {target} pts ({numDives} dives) · {d.ageGroupLabel}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {/* For Gale (Group E), show coach discretion status */}
-        {!d.qualifying?.["1M"]?.score && (
-          <div style={cardStyle}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div style={{fontSize:13,fontWeight:700,color:theme.text}}>
-                <Icon type="target" size={14}/> AAU Nationals
+        {/* AAU Nationals Qualifying — next season, by FINA age at the next championship */}
+        {(() => {
+          const now = new Date();
+          const nextChampYear = now.getFullYear() + (now.getMonth() >= 6 ? 1 : 0);
+          const by = d.birthYear || (2026 - d.finaAge);
+          const nextAge = nextChampYear - by;
+          const ageToGroup = a => a<=9?"E":a<=11?"D":a<=13?"C":a<=15?"B":"A";
+          const grp = ageToGroup(nextAge);
+          const gi = AAU_QUALIFYING[grp];
+          const movedUp = grp !== d.ageGroup;
+          const first = d.name.split(" ")[0];
+          return (
+            <div style={cardStyle}>
+              <div style={{fontSize:13,fontWeight:700,color:theme.text,marginBottom:2}}>
+                <Icon type="target" size={14}/> {nextChampYear} AAU Nationals Qualifying
               </div>
-              <span style={{fontSize:10,fontWeight:600,padding:"2px 8px",borderRadius:10,background:`${theme.success}22`,color:theme.success}}>
-                No minimum score
-              </span>
+              <div style={{fontSize:10,color:theme.textMuted,marginBottom:8}}>
+                {first} will be FINA {nextAge} · {gi.label}{movedUp?" — moved up this season":""}
+              </div>
+              {["1M","3M"].map(h=>{
+                const best = h==="1M" ? best1M : best3M;
+                const tgt = gi.boys[h];
+                if(!tgt){
+                  return (
+                    <div key={h} style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:6}}>
+                      <span style={{fontSize:12,fontWeight:600,color:theme.text}}>{h}</span>
+                      <span style={{fontSize:11,color:theme.success}}>No minimum · coach's discretion</span>
+                    </div>
+                  );
+                }
+                const pct = Math.min(100,(best/tgt.score)*100);
+                const ok = best>=tgt.score;
+                return (
+                  <div key={h} style={{marginBottom:10}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:3}}>
+                      <span style={{fontSize:12,fontWeight:600,color:theme.text}}>{h}</span>
+                      <span style={{fontSize:11,color: ok ? theme.success : theme.textMuted}}>
+                        {best.toFixed(1)} / {tgt.score} {ok ? "✓ on pace" : `(${(tgt.score-best).toFixed(1)} to go)`}
+                      </span>
+                    </div>
+                    <div style={{height:7,background:theme.surface,borderRadius:4,overflow:"hidden"}}>
+                      <div style={{height:"100%",borderRadius:4,transition:"width 0.5s",width:`${pct}%`,
+                        background: ok ? `linear-gradient(90deg,${theme.success},#34d399)` : `linear-gradient(90deg,${theme.accent},#60a5fa)`}}/>
+                    </div>
+                    <div style={{fontSize:9,color:theme.textMuted,marginTop:2}}>
+                      {tgt.score} pts ({tgt.dives} dives) · {gi.label}{movedUp?" — first season needing a qualifying score":""}
+                    </div>
+                  </div>
+                );
+              })}
+              <div style={{fontSize:9,color:theme.textMuted,marginTop:4,fontStyle:"italic"}}>
+                Best so far vs the {nextChampYear} standard{movedUp?" (new group may use a different dive count)":""}. Numbers from the last published AAU table — update when {nextChampYear} scores post.
+              </div>
             </div>
-            <div style={{fontSize:11,color:theme.textMuted,marginTop:4}}>
-              Coach discretion · 3 Vols + 1 Opt (4 dives) · Max Vol DD: 5.4
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Star Dives — motivational highlight */}
         {(() => {
@@ -2977,7 +2982,15 @@ export default function PikeDiveTracker() {
             </div>
           </div>
           <div style={{fontSize:10,color:theme.textMuted,textAlign:"right"}}>
-            <div>{diver.name}</div>
+            <select value={activeDiver} onChange={e=>setActiveDiver(e.target.value)} style={{
+              background:theme.surface,color:theme.text,border:`1px solid ${theme.cardBorder}`,
+              borderRadius:8,fontSize:12,fontWeight:700,padding:"3px 20px 3px 8px",cursor:"pointer",
+              appearance:"none",WebkitAppearance:"none",textAlign:"right",marginBottom:2,
+              backgroundImage:`url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='3'><path d='M6 9l6 6 6-6'/></svg>")`,
+              backgroundRepeat:"no-repeat",backgroundPosition:"right 6px center",
+            }}>
+              {Object.values(DIVERS).map(dv=>(<option key={dv.id} value={dv.id}>{dv.name}</option>))}
+            </select>
             <div>FINA {diver.finaAge} · {diver.ageGroup}</div>
             <div style={{fontSize:9,display:"flex",alignItems:"center",gap:3,justifyContent:"flex-end",marginTop:1}}>
               <span style={{width:5,height:5,borderRadius:"50%",display:"inline-block",
@@ -2993,10 +3006,17 @@ export default function PikeDiveTracker() {
       <div style={{padding:16}}>
         {activeTab==="dashboard" && renderDashboard()}
         {activeTab==="stats" && renderDiveStats()}
-        {activeTab==="practice" && renderPracticeLog()}
+        {activeTab==="practice" && (
+          <>
+            <div style={{display:"flex",gap:6,marginBottom:12}}>
+              <button onClick={()=>setPracticeView("log")} style={{flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:practiceView==="log"?theme.accent:theme.surface,color:practiceView==="log"?"#fff":theme.textMuted}}>Practice Log</button>
+              <button onClick={()=>setPracticeView("print")} style={{flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:practiceView==="print"?theme.accent:theme.surface,color:practiceView==="print"?"#fff":theme.textMuted}}>Print Sheet</button>
+            </div>
+            {practiceView==="log" ? renderPracticeLog() : renderPracticePlan()}
+          </>
+        )}
         {activeTab==="compete" && renderCompetition()}
         {activeTab==="recommend" && renderRecommendations()}
-        {activeTab==="print" && renderPracticePlan()}
       </div>
 
       {/* Bottom Nav */}
@@ -3021,9 +3041,6 @@ export default function PikeDiveTracker() {
         </button>
         <button onClick={()=>setActiveTab("recommend")} style={tabBtn("recommend")}>
           <Icon type="star" size={16}/> Plan
-        </button>
-        <button onClick={()=>setActiveTab("print")} style={tabBtn("print")}>
-          <Icon type="printer" size={16}/> Print
         </button>
       </div>
     </div>
