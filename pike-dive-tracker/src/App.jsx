@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.5.0";
+const APP_VERSION = "v1.6.0";
 const APP_UPDATED = "Jul 20, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -131,6 +131,11 @@ const DIVELIVE_RESULTS = [
 const DIVERS = {
   hayden: {
     id: "hayden", name: "Hayden Tashiro", diveMeetsNum: 80986, birthYear: 2014,
+    synchroHistory: [
+      {meet:"2026 AAU Nationals", date:"2026-07-16", event:"Synchro 1M", height:"1M", round:"final", place:9, score:104.85, partner:"Anthony Luzzi"},
+      {meet:"2026 AAU Nationals", date:"2026-07-17", event:"Synchro 3M", height:"3M", round:"final", place:13, score:88.45, partner:"Gale Tashiro"},
+      {meet:"2026 AAU Nationals", date:"2026-07-17", event:"Synchro 3M", height:"3M", round:"final", place:14, score:88.20, partner:"Anthony Luzzi"},
+    ],
     finaAge: 12, ageGroup: "C", ageGroupLabel: "Group C Boys (12-13)",
     qualifying: {
       "1M": { score: 210, dives: 8 },
@@ -195,6 +200,10 @@ const DIVERS = {
   },
   gale: {
     id: "gale", name: "Gale Tashiro", diveMeetsNum: 152421, birthYear: 2017,
+    synchroHistory: [
+      {meet:"2026 AAU Nationals", date:"2026-07-16", event:"Synchro 1M", height:"1M", round:"final", place:11, score:97.25, partner:"Coulton Woodford"},
+      {meet:"2026 AAU Nationals", date:"2026-07-17", event:"Synchro 3M", height:"3M", round:"final", place:13, score:88.45, partner:"Hayden Tashiro"},
+    ],
     finaAge: 9, ageGroup: "E", ageGroupLabel: "Group E Boys (9 & Under)",
     qualifying: {
       "1M": { score: null, note: "No minimum (coach discretion)" },
@@ -1041,7 +1050,77 @@ export default function PikeDiveTracker() {
 
     return (
       <div>
-        {/* DD Lookup Tool */}
+        {(() => {
+          const mh = diver.meetHistory || [];
+          const sh = diver.synchroHistory || [];
+          const gradYear = (diver.birthYear || 2007) + 18;
+          const ord = p => p===1?"st":p===2?"nd":p===3?"rd":"th";
+          const aaInd = mh.filter(m=>/AAU Nationals/i.test(m.meet)&&m.round==="final"&&typeof m.place==="number"&&m.place<=12).map(m=>({...m,kind:"ind"}));
+          const aaSyn = sh.filter(m=>/AAU Nationals/i.test(m.meet)&&m.round==="final"&&typeof m.place==="number"&&m.place<=6).map(m=>({...m,kind:"syn"}));
+          const aa = [...aaInd,...aaSyn].sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+          const podium = mh.filter(m=>typeof m.place==="number"&&m.place<=3);
+          const wins = podium.filter(m=>m.place===1).length;
+          const s1=mh.filter(m=>m.height==="1M"), s3=mh.filter(m=>m.height==="3M");
+          const pb1=s1.length?s1.reduce((a,b)=>b.score>a.score?b:a):null;
+          const pb3=s3.length?s3.reduce((a,b)=>b.score>a.score?b:a):null;
+          const consD=(diver.diveStats||[]).filter(x=>x.times>=3&&x.highScore>0);
+          const consistency=consD.length?Math.round(consD.reduce((a,x)=>a+x.avgScore/x.highScore,0)/consD.length*100):null;
+          const topDD=Math.max(0,...(diver.diveStats||[]).map(x=>DD_TABLE[x.dive]?.[x.height]||0));
+          const boards=[...new Set(mh.map(m=>m.height))].filter(Boolean);
+          const dl=DIVELIVE_RESULTS.filter(r=>r.diverId===diver.id&&r.dives);
+          const byYear={}; dl.forEach(r=>{const y=(r.date||"").slice(0,4); if(!y)return; r.dives.forEach(d=>{(byYear[y]=byYear[y]||[]).push(d.dd);});});
+          const ddTrend=Object.keys(byYear).sort().map(y=>({y,dd:byYear[y].reduce((a,b)=>a+b,0)/byYear[y].length}));
+          const rising = ddTrend.length>=2 && ddTrend[ddTrend.length-1].dd > ddTrend[0].dd;
+          const topDives=(diver.diveStats||[]).filter(x=>DD_TABLE[x.dive]).map(x=>({...x,dd:DD_TABLE[x.dive]?.[x.height]||0,nm:DD_TABLE[x.dive]?.name})).sort((a,b)=>b.highScore-a.highScore).slice(0,5);
+          const Stat=({label,value,sub,color})=>(<div style={{flex:1,textAlign:"center",padding:"7px 2px",minWidth:0}}><div style={{fontSize:8,color:theme.textMuted,textTransform:"uppercase",letterSpacing:"0.04em"}}>{label}</div><div style={{fontSize:17,fontWeight:800,color:color||theme.text}}>{value}</div>{sub?<div style={{fontSize:8,color:theme.textMuted,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{sub}</div>:null}</div>);
+          return (
+            <div style={{...cardStyle, background:`linear-gradient(135deg, ${theme.card}, ${theme.accent}0f)`, border:`1px solid ${theme.accent}44`, marginBottom:12}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+                <div><div style={{fontSize:14,fontWeight:800,color:theme.text}}>🎓 College Scouting Sheet</div>
+                  <div style={{fontSize:10,color:theme.textMuted,marginTop:1}}>{diver.name} · Class of {gradYear} · Pike Dive Academy</div></div>
+                <div style={{textAlign:"right",fontSize:9,color:theme.textMuted,lineHeight:1.3}}>FINA {diver.finaAge}<br/>Group {diver.ageGroup}</div>
+              </div>
+              <div style={{padding:"8px 10px",borderRadius:10,marginBottom:8,background: aa.length?`${theme.gold}18`:theme.surface,border:`1px solid ${aa.length?theme.gold+"55":theme.cardBorder}`}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div style={{fontSize:12,fontWeight:700,color:aa.length?theme.gold:theme.textMuted}}>🏅 AAU All-American{aa.length?` × ${aa.length}`:""}</div>
+                  {aa.length?null:<span style={{fontSize:10,color:theme.textMuted}}>Working toward it</span>}
+                </div>
+                {aa.length>0&&(<div style={{marginTop:6,display:"flex",flexWrap:"wrap",gap:5}}>
+                  {aa.map((m,i)=>{const syn=m.kind==="syn";const c=syn?"#22d3ee":theme.gold;return (<span key={i} style={{fontSize:9,fontWeight:600,padding:"2px 6px",borderRadius:6,background:`${c}22`,color:c,border:`1px solid ${c}44`}}>{(m.date||"").slice(0,4)} · {m.height}{syn?" Sync":""} · {m.place}{ord(m.place)}</span>);})}
+                </div>)}
+                <div style={{fontSize:8,color:theme.textMuted,marginTop:6,fontStyle:"italic"}}>Top 12 in an individual final, or top 6 in a synchro final, at AAU Nationals = All-American.</div>
+              </div>
+              <div style={{display:"flex",background:theme.surface,borderRadius:10,marginBottom:6}}>
+                <Stat label="Best 1M" value={pb1?pb1.score.toFixed(1):"—"} sub={pb1?pb1.meet:""} color={theme.accent}/>
+                <Stat label="Best 3M" value={pb3?pb3.score.toFixed(1):"—"} sub={pb3?pb3.meet:""} color="#a78bfa"/>
+                <Stat label="Podiums" value={podium.length} sub={`${wins} win${wins===1?"":"s"}`} color={theme.gold}/>
+                <Stat label="Meets" value={mh.length} color={theme.text}/>
+              </div>
+              <div style={{display:"flex",background:theme.surface,borderRadius:10,marginBottom:8}}>
+                <Stat label="Consistency" value={consistency!=null?consistency+"%":"—"} sub="avg vs best" color={theme.success}/>
+                <Stat label="Top DD" value={topDD?topDD.toFixed(1):"—"} sub="hardest competed"/>
+                <Stat label="Boards" value={boards.length?boards.join(" · "):"—"} sub={boards.includes("Platform")?"":"no platform yet"}/>
+              </div>
+              {ddTrend.length>=2&&(<div style={{padding:"7px 10px",borderRadius:10,background:theme.surface,marginBottom:8}}>
+                <div style={{fontSize:9,fontWeight:700,color:theme.textMuted,textTransform:"uppercase",letterSpacing:"0.04em",marginBottom:3}}>Difficulty progression {rising?<span style={{color:theme.success}}>↑ rising</span>:null}</div>
+                <div style={{display:"flex",alignItems:"baseline",gap:8,flexWrap:"wrap"}}>{ddTrend.map((t,i)=>(<span key={i} style={{fontSize:11,color:theme.text}}><span style={{color:theme.textMuted,fontSize:9}}>{t.y}</span> <b>{t.dd.toFixed(2)}</b>{i<ddTrend.length-1?<span style={{color:theme.textMuted}}> →</span>:null}</span>))}</div>
+                <div style={{fontSize:8,color:theme.textMuted,marginTop:2}}>Avg degree of difficulty of competed dives, by year.</div>
+              </div>)}
+              {topDives.length>0&&(<div style={{marginBottom:2}}>
+                <div style={{fontSize:9,fontWeight:700,color:theme.textMuted,marginBottom:4,textTransform:"uppercase",letterSpacing:"0.04em"}}>Top Dives · best competition score</div>
+                {topDives.map((x,i)=>(<div key={i} style={{display:"flex",alignItems:"center",gap:8,padding:"4px 0",borderTop:i>0?`1px solid ${theme.cardBorder}`:"none"}}>
+                  <span style={{width:5,height:16,borderRadius:3,background:GROUP_COLORS[getDiveGroup(x.dive)],flexShrink:0}}/>
+                  <span style={{fontSize:12,fontWeight:700,color:theme.text,width:52,flexShrink:0}}>{x.dive} <span style={{fontSize:9,color:theme.textMuted}}>{x.height}</span></span>
+                  <span style={{fontSize:10,color:theme.textMuted,flex:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{x.nm}</span>
+                  <span style={{fontSize:9,color:theme.textMuted,flexShrink:0}}>DD {x.dd}</span>
+                  <span style={{fontSize:13,fontWeight:800,color:theme.gold,width:42,textAlign:"right",flexShrink:0}}>{x.highScore.toFixed(1)}</span>
+                </div>))}
+              </div>)}
+              <div style={{fontSize:8,color:theme.textMuted,marginTop:8,fontStyle:"italic",textAlign:"center"}}>Updates automatically as new results are added.</div>
+            </div>
+          );
+        })()}
+                {/* DD Lookup Tool */}
         <div style={{...cardStyle,padding:"10px 12px",marginBottom:12}}>
           <div style={{fontSize:11,fontWeight:700,color:theme.text,marginBottom:4}}>🔍 DD Lookup</div>
           <input placeholder="Search any dive code or name..." value={ddLookup}
@@ -3034,7 +3113,7 @@ export default function PikeDiveTracker() {
         position:"fixed",bottom:0,left:0,right:0,
         width:"100%",
         background:theme.card, borderTop:`1px solid ${theme.cardBorder}`,
-        display:"flex",padding:"6px 8px max(8px, env(safe-area-inset-bottom))",gap:2,
+        display:"flex",padding:"6px 8px 12px",gap:2,
         boxShadow:`0 -4px 20px rgba(0,0,0,0.3)`,
       }}>
         <button onClick={()=>setActiveTab("dashboard")} style={tabBtn("dashboard")}>
