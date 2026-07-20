@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.7.4";
+const APP_VERSION = "v1.7.5";
 const APP_UPDATED = "Jul 20, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -325,7 +325,8 @@ const DIVERS = {
   
   // Sort each diver's meetHistory by date descending (most recent first)
   Object.values(DIVERS).forEach(diver => {
-    diver.meetHistory.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+    // Most recent on top; within the same date, Final ranks above Prelim (prelim precedes final).
+    diver.meetHistory.sort((a,b) => (b.date||"").localeCompare(a.date||"") || ((a.round==="prelim"?1:0) - (b.round==="prelim"?1:0)));
   });
 })();
 
@@ -1071,7 +1072,7 @@ export default function PikeDiveTracker() {
       const topDives=(diver.diveStats||[]).filter(x=>DD_TABLE[x.dive]).map(x=>({...x,dd:DD_TABLE[x.dive]?.[x.height]||0,nm:DD_TABLE[x.dive]?.name})).sort((a,b)=>b.highScore-a.highScore).slice(0,6);
       // Collapse prelim→final: the final is what matters, so drop a prelim row when its final exists.
       const hasFinal=new Set(mh.filter(m=>m.round==="final").map(m=>`${m.meet}|${m.height}|${m.event}`));
-      const results=[...mh].sort((a,b)=>(b.date||"").localeCompare(a.date||"")).filter(m=>!(m.round==="prelim"&&hasFinal.has(`${m.meet}|${m.height}|${m.event}`))).slice(0,10);
+      const results=[...mh].sort((a,b)=>(b.date||"").localeCompare(a.date||"") || ((a.round==="prelim"?1:0) - (b.round==="prelim"?1:0))).filter(m=>!(m.round==="prelim"&&hasFinal.has(`${m.meet}|${m.height}|${m.event}`))).slice(0,10);
       const today=new Date().toISOString().slice(0,10);
       const html=`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${diver.name} - Recruiting Profile</title><style>
         *{box-sizing:border-box;margin:0;padding:0} body{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#1a1a2e;padding:14px;max-width:760px;margin:0 auto;font-size:10.5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
