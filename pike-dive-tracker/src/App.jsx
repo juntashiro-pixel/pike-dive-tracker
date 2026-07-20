@@ -730,7 +730,7 @@ export default function PikeDiveTracker() {
   };
 
   const tabBtn = (tab) => ({
-    flex:1, padding:"8px 2px", border:"none",
+    flex:1, padding:"5px 2px", border:"none",
     background: activeTab===tab ? theme.accent : "transparent",
     color: activeTab===tab ? "#fff" : theme.textMuted,
     fontWeight: activeTab===tab ? 700 : 500,
@@ -984,8 +984,18 @@ export default function PikeDiveTracker() {
               display:"flex",justifyContent:"space-between",alignItems:"center",
               padding:"7px 0",borderBottom:i<3?`1px solid ${theme.cardBorder}`:"none",
             }}>
-              <div>
-                <div style={{fontSize:12,fontWeight:600,color:theme.text}}>{m.meet}</div>
+              <div style={{flex:1,minWidth:0,marginRight:8}}>
+                <div style={{fontSize:12,fontWeight:600,color:theme.text,display:"flex",alignItems:"center",gap:6}}>
+                  <span style={{overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{m.meet}</span>
+                  {(m.round==="prelim"||m.round==="final") && (
+                    <span style={{fontSize:8,fontWeight:700,letterSpacing:"0.03em",padding:"1px 5px",borderRadius:5,flexShrink:0,
+                      background: m.round==="final" ? `${theme.accent}22` : `${theme.textMuted}22`,
+                      color: m.round==="final" ? theme.accent : theme.textMuted,
+                      border:`1px solid ${m.round==="final"?theme.accent:theme.textMuted}44`}}>
+                      {m.round==="final" ? "FINAL" : "PRELIM"}
+                    </span>
+                  )}
+                </div>
                 <div style={{fontSize:10,color:theme.textMuted}}>{m.event} — {m.date}</div>
               </div>
               <div style={{textAlign:"right"}}>
@@ -2959,7 +2969,7 @@ export default function PikeDiveTracker() {
       maxWidth:420, margin:"0 auto", minHeight:"100vh",
       background: theme.bg, color: theme.text,
       fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      paddingBottom: 90,
+      paddingBottom: 78,
     }}>
       {/* Header */}
       <div style={{
@@ -3024,23 +3034,23 @@ export default function PikeDiveTracker() {
         position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
         width:"100%",maxWidth:420,
         background:theme.card, borderTop:`1px solid ${theme.cardBorder}`,
-        display:"flex",padding:"6px 8px calc(10px + env(safe-area-inset-bottom, 0px))",gap:2,
+        display:"flex",padding:"3px 6px calc(4px + env(safe-area-inset-bottom, 0px))",gap:2,
         boxShadow:`0 -4px 20px rgba(0,0,0,0.3)`,
       }}>
         <button onClick={()=>setActiveTab("dashboard")} style={tabBtn("dashboard")}>
-          <Icon type="wave" size={16}/> Home
+          <Icon type="wave" size={15}/> Home
         </button>
         <button onClick={()=>setActiveTab("stats")} style={tabBtn("stats")}>
-          <Icon type="chart" size={16}/> Stats
+          <Icon type="chart" size={15}/> Stats
         </button>
         <button onClick={()=>setActiveTab("practice")} style={tabBtn("practice")}>
-          <Icon type="clipboard" size={16}/> Practice
+          <Icon type="clipboard" size={15}/> Practice
         </button>
         <button onClick={()=>setActiveTab("compete")} style={tabBtn("compete")}>
-          <Icon type="trophy" size={16}/> Compete
+          <Icon type="trophy" size={15}/> Compete
         </button>
         <button onClick={()=>setActiveTab("recommend")} style={tabBtn("recommend")}>
-          <Icon type="star" size={16}/> Plan
+          <Icon type="star" size={15}/> Plan
         </button>
       </div>
     </div>
