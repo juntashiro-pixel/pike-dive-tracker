@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.6.2";
+const APP_VERSION = "v1.7.0";
 const APP_UPDATED = "Jul 20, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -481,6 +481,20 @@ export default function PikeDiveTracker() {
   const [showPrintPreview, setShowPrintPreview] = useState(false);
   const [showAddMeet, setShowAddMeet] = useState(false);
   const [syncStatus, setSyncStatus] = useState("");
+
+  // ─── DAILY SPLASH SCREEN ───────────────────────────────────
+  const [showSplash, setShowSplash] = useState(() => {
+    try { return localStorage.getItem("dt-splash-date") !== new Date().toISOString().slice(0,10); }
+    catch(e) { return true; }
+  });
+  const [splashClosing, setSplashClosing] = useState(false);
+  useEffect(() => {
+    if (!showSplash) return;
+    try { localStorage.setItem("dt-splash-date", new Date().toISOString().slice(0,10)); } catch(e){}
+    const fade = setTimeout(() => setSplashClosing(true), 1750);
+    const done = setTimeout(() => setShowSplash(false), 2200);
+    return () => { clearTimeout(fade); clearTimeout(done); };
+  }, [showSplash]);
 
   // ─── LIVE SCORING (unofficial calculator) ──────────────────
   const blankRow = () => ({ code:"", dd:"", scores:["","","","","","",""] });
@@ -3112,6 +3126,61 @@ export default function PikeDiveTracker() {
       fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))",
     }}>
+      {/* ─── Daily Splash Screen ─────────────────────────────── */}
+      {showSplash && (
+        <div onClick={()=>{setSplashClosing(true);setTimeout(()=>setShowSplash(false),400);}} style={{
+          position:"fixed", inset:0, zIndex:9999,
+          display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:2,
+          background:"radial-gradient(120% 90% at 50% 30%, #16223d 0%, #0c1220 60%, #070b14 100%)",
+          paddingBottom:"env(safe-area-inset-bottom, 0px)",
+          opacity: splashClosing ? 0 : 1,
+          transition:"opacity 0.45s ease",
+          cursor:"pointer",
+        }}>
+          <style>{`
+            @keyframes dtSplashPop { 0%{transform:scale(0.55);opacity:0} 55%{transform:scale(1.08);opacity:1} 100%{transform:scale(1)} }
+            @keyframes dtSplashBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+            @keyframes dtSplashRise { 0%{transform:translateY(14px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+            @keyframes dtSplashBar { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+            @keyframes dtRipple { 0%{transform:scale(0.6);opacity:0.55} 100%{transform:scale(2.4);opacity:0} }
+          `}</style>
+          {/* Ripple rings behind the mark */}
+          <div style={{position:"relative", width:132, height:132, display:"flex", alignItems:"center", justifyContent:"center", marginBottom:6}}>
+            <div style={{position:"absolute", width:132, height:132, borderRadius:"50%", border:`2px solid ${theme.accent}`, animation:"dtRipple 2.1s ease-out infinite"}}/>
+            <div style={{position:"absolute", width:132, height:132, borderRadius:"50%", border:`2px solid ${theme.accent}`, animation:"dtRipple 2.1s ease-out infinite 0.7s"}}/>
+            <div style={{
+              width:96, height:96, borderRadius:26,
+              background:`linear-gradient(150deg, ${theme.accent} 0%, #6d5cf0 55%, #a78bfa 100%)`,
+              display:"flex", alignItems:"center", justifyContent:"center",
+              boxShadow:`0 14px 40px -8px ${theme.accent}88, inset 0 1px 2px rgba(255,255,255,0.35)`,
+              animation:"dtSplashPop 0.7s cubic-bezier(.2,1.3,.4,1) both",
+            }}>
+              <span style={{fontSize:52, animation:"dtSplashBob 2.4s ease-in-out infinite 0.7s", display:"block", lineHeight:1}}>🤿</span>
+            </div>
+          </div>
+          <div style={{
+            fontSize:30, fontWeight:800, letterSpacing:"-0.03em",
+            background:`linear-gradient(135deg, ${theme.accent}, #a78bfa)`,
+            WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+            animation:"dtSplashRise 0.6s ease 0.35s both",
+          }}>Dive Tracker</div>
+          <div style={{
+            fontSize:11, fontWeight:600, letterSpacing:"0.32em", color:theme.textMuted, marginTop:4,
+            animation:"dtSplashRise 0.6s ease 0.5s both",
+          }}>PIKE DIVE ACADEMY</div>
+          {/* Loading shimmer bar */}
+          <div style={{
+            width:120, height:3, borderRadius:3, overflow:"hidden", marginTop:26,
+            background:"rgba(255,255,255,0.08)",
+            animation:"dtSplashRise 0.6s ease 0.65s both",
+          }}>
+            <div style={{width:"60%", height:"100%", borderRadius:3,
+              background:`linear-gradient(90deg, transparent, ${theme.accent}, transparent)`,
+              animation:"dtSplashBar 1.15s ease-in-out infinite"}}/>
+          </div>
+          <div style={{position:"absolute", bottom:"calc(28px + env(safe-area-inset-bottom, 0px))", fontSize:9, color:theme.textMuted, opacity:0.55, letterSpacing:"0.05em"}}>{APP_VERSION}</div>
+        </div>
+      )}
       {/* Header */}
       <div style={{
         padding:"16px 16px 12px",
