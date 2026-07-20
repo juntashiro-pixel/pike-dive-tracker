@@ -13,8 +13,8 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.4.0";
-const APP_UPDATED = "Jun 15, 2026";
+const APP_VERSION = "v1.5.0";
+const APP_UPDATED = "Jul 20, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
 const DD_TABLE = {
@@ -730,7 +730,7 @@ export default function PikeDiveTracker() {
   };
 
   const tabBtn = (tab) => ({
-    flex:1, padding:"5px 2px", border:"none",
+    flex:1, padding:"7px 3px", border:"none",
     background: activeTab===tab ? theme.accent : "transparent",
     color: activeTab===tab ? "#fff" : theme.textMuted,
     fontWeight: activeTab===tab ? 700 : 500,
@@ -2969,7 +2969,7 @@ export default function PikeDiveTracker() {
       maxWidth:420, margin:"0 auto", minHeight:"100vh",
       background: theme.bg, color: theme.text,
       fontFamily: "'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      paddingBottom: 78,
+      paddingBottom: "calc(80px + env(safe-area-inset-bottom, 0px))",
     }}>
       {/* Header */}
       <div style={{
@@ -3031,26 +3031,26 @@ export default function PikeDiveTracker() {
 
       {/* Bottom Nav */}
       <div style={{
-        position:"fixed",bottom:0,left:"50%",transform:"translateX(-50%)",
-        width:"100%",maxWidth:420,
+        position:"fixed",bottom:0,left:0,right:0,
+        width:"100%",
         background:theme.card, borderTop:`1px solid ${theme.cardBorder}`,
-        display:"flex",padding:"3px 6px calc(4px + env(safe-area-inset-bottom, 0px))",gap:2,
+        display:"flex",padding:"6px 8px max(8px, env(safe-area-inset-bottom))",gap:2,
         boxShadow:`0 -4px 20px rgba(0,0,0,0.3)`,
       }}>
         <button onClick={()=>setActiveTab("dashboard")} style={tabBtn("dashboard")}>
-          <Icon type="wave" size={15}/> Home
+          <Icon type="wave" size={16}/> Home
         </button>
         <button onClick={()=>setActiveTab("stats")} style={tabBtn("stats")}>
-          <Icon type="chart" size={15}/> Stats
+          <Icon type="chart" size={16}/> Stats
         </button>
         <button onClick={()=>setActiveTab("practice")} style={tabBtn("practice")}>
-          <Icon type="clipboard" size={15}/> Practice
+          <Icon type="clipboard" size={16}/> Practice
         </button>
         <button onClick={()=>setActiveTab("compete")} style={tabBtn("compete")}>
-          <Icon type="trophy" size={15}/> Compete
+          <Icon type="trophy" size={16}/> Compete
         </button>
         <button onClick={()=>setActiveTab("recommend")} style={tabBtn("recommend")}>
-          <Icon type="star" size={15}/> Plan
+          <Icon type="star" size={16}/> Plan
         </button>
       </div>
     </div>
