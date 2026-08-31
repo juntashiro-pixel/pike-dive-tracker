@@ -13,8 +13,8 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.7.5";
-const APP_UPDATED = "Jul 20, 2026";
+const APP_VERSION = "v1.8.0";
+const APP_UPDATED = "Aug 31, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
 const DD_TABLE = {
@@ -28,7 +28,7 @@ const DD_TABLE = {
   "101C":{name:"Forward Dive Tuck","1M":1.2,"3M":1.4},
   "102A":{name:"Forward Somersault Straight","1M":1.6,"3M":1.7},
   "102B":{name:"Forward Somersault Pike","1M":1.5,"3M":1.6},
-  "102C":{name:"Forward Somersault Tuck","1M":1.4,"3M":1.6},
+  "102C":{name:"Forward Somersault Tuck","1M":1.4,"3M":1.5},
   "103A":{name:"Forward 1½ Somersault Straight","1M":2.0,"3M":2.0},
   "103B":{name:"Forward 1½ Somersault Pike","1M":1.7,"3M":1.7},
   "103C":{name:"Forward 1½ Somersault Tuck","1M":1.6,"3M":1.7},
@@ -59,7 +59,7 @@ const DD_TABLE = {
   "303C":{name:"Reverse 1½ Somersault Tuck","1M":2.1,"3M":2.0},
   "401A":{name:"Inward Dive Straight","1M":1.8,"3M":2.0},
   "401B":{name:"Inward Dive Pike","1M":1.5,"3M":1.7},
-  "401C":{name:"Inward Dive Tuck","1M":1.4,"3M":1.6},
+  "401C":{name:"Inward Dive Tuck","1M":1.4,"3M":1.3},
   "402C":{name:"Inward Somersault Tuck","1M":1.5,"3M":1.6},
   "403C":{name:"Inward 1½ Somersault Tuck","1M":2.1,"3M":2.2},
   "5101A":{name:"Forward Jump ½ Twist Straight","1M":1.0,"3M":1.0},
@@ -126,6 +126,39 @@ const DIVELIVE_RESULTS = [
   {diverId:"gale",meet:"2026 AAU Nationals",date:"2026-07-17",event:"Boys 9 & Under 3M",height:"3M",round:"final",place:9,score:74.05,source:"divelive",dives:[{code:"101C",dd:1.4,net:13.00,award:18.20,role:"vol"},{code:"201A",dd:1.9,net:9.50,award:18.05,role:"vol"},{code:"401C",dd:1.3,net:16.00,award:20.80,role:"vol"},{code:"5211A",dd:2.0,net:8.50,award:17.00,role:"opt"}]},
   {diverId:"hayden",meet:"2026 AAU Nationals",date:"2026-07-16",event:"Boys 12 1M",height:"1M",round:"prelim",place:17,score:134.40,source:"divelive",dives:[{code:"201A",dd:1.7,net:14.00,award:23.80,role:"vol"},{code:"401C",dd:1.4,net:14.50,award:20.30,role:"vol"},{code:"301C",dd:1.6,net:8.50,award:13.60,role:"vol"},{code:"5211A",dd:1.8,net:10.50,award:18.90,role:"vol"},{code:"102A",dd:1.6,net:11.50,award:18.40,role:"vol"},{code:"202C",dd:1.5,net:6.50,award:9.75,role:"opt"},{code:"5122D",dd:1.9,net:5.50,award:10.45,role:"opt"},{code:"103C",dd:1.6,net:12.00,award:19.20,role:"opt"}]},
 ];
+
+// ─── EVAL SHEET (tryout / new-coach dive list) ────────────────
+// Ordered exactly as each diver competes the list. Codes only — every
+// number on the Eval page is read live from diveStats, so it refreshes
+// itself as new meets are added. No numbers are stored here.
+const EVAL_SHEET = {
+  hayden: {
+    headline: "Best meet: 243.20 — 3rd, Group C Boys 1M, JDA Summer Invite (Jun 2026). Clears the AAU Group C 1M qualifying standard of 210.",
+    lists: {
+      "1M": { note: "8 dives — the order he swam at JDA Summer Invite, his best meet.",
+              codes: ["103C","201A","401C","301C","5211A","102A","202C","5122D"] },
+      "3M": { note: "Fewer 3M meets, but the scores are there.",
+              codes: ["101A","201A","401C","5211A","202C","102C"] },
+    },
+    alternates: { "1M": ["102C","101A"], "3M": ["101C"] },
+    training: [],
+    strength: "Back group is the strength — 201A has scored across 21 meets and still produced his single highest dive of the season.",
+    working: "Reverse-group consistency (301C swings wide) and holding the 1-twist optional under pressure. Both are execution, not acquisition — he owns the dives.",
+  },
+  gale: {
+    headline: "Went into the AAU Nationals 1M final seeded 10th and finished 5th — the biggest move in the field, +22.6 points on the same four dives.",
+    lists: {
+      "1M": { note: "4 dives — the list he took to 5th at AAU Nationals.",
+              codes: ["103C","5211A","201A","5122D"] },
+      "3M": { note: "4 dives — the list from AAU Nationals.",
+              codes: ["101C","201A","401C","5211A"] },
+    },
+    alternates: { "1M": ["101A","102C","401C","201C","202C","101C"], "3M": ["101A"] },
+    training: [{code:"5121B", name:"Forward Somersault ½ Twist Pike", note:"On his coach's list, not yet competed"}],
+    strength: "Already competing a 1.9-DD twisting optional at nine. His 201A on 3M is the most dependable dive either brother owns.",
+    working: "Making 5211A repeatable, and building a deeper 3M optional list.",
+  },
+};
 
 // ─── DIVER DATA ──────────────────────────────────────────────
 const DIVERS = {
@@ -473,6 +506,7 @@ const MiniDiveAdder = ({onAdd, placeholder, theme}) => {
 export default function PikeDiveTracker() {
   const [activeDiver, setActiveDiver] = useState("hayden");
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [evalBoard, setEvalBoard] = useState("1M");
   const [practiceView, setPracticeView] = useState("log");
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
   const [heightFilter, setHeightFilter] = useState("ALL");
@@ -758,11 +792,11 @@ export default function PikeDiveTracker() {
   };
 
   const tabBtn = (tab) => ({
-    flex:1, padding:"7px 3px", border:"none",
+    flex:1, padding:"7px 1px", border:"none",
     background: activeTab===tab ? theme.accent : "transparent",
     color: activeTab===tab ? "#fff" : theme.textMuted,
     fontWeight: activeTab===tab ? 700 : 500,
-    fontSize: 9, borderRadius: 8, cursor:"pointer",
+    fontSize: 8.5, borderRadius: 8, cursor:"pointer",
     transition:"all 0.2s", display:"flex", flexDirection:"column",
     alignItems:"center", gap:2, letterSpacing:"-0.01em",
   });
@@ -1765,6 +1799,247 @@ export default function PikeDiveTracker() {
       })}
     </div>
   );
+
+  // ─── RENDER: EVAL SHEET ────────────────────────────────────
+  // A clean dive list to hand a coach at a tryout or evaluation.
+  // Everything is computed from diveStats/meetHistory, so it stays current.
+  const renderEvalSheet = () => {
+    const cfg = EVAL_SHEET[activeDiver];
+    if(!cfg) return <div style={cardStyle}>No eval sheet configured for this diver.</div>;
+    const h = evalBoard;
+
+    // DD actually used on official meet sheets beats the static table.
+    const meetDD = (code) => {
+      const rows = DIVELIVE_RESULTS.filter(r => r.diverId===activeDiver && r.height===h);
+      for(let i=rows.length-1;i>=0;i--){
+        const d = rows[i].dives.find(x=>x.code===code);
+        if(d) return d.dd;
+      }
+      return (DD_TABLE[code]||{})[h] ?? null;
+    };
+    const statFor = (code) => diver.diveStats.find(s=>s.dive===code && s.height===h) || null;
+    const nameFor = (code) => (DD_TABLE[code]||{}).name || code;
+
+    // Rank by average across every dive this diver has done on this board.
+    const boardStats = diver.diveStats.filter(s=>s.height===h).sort((a,b)=>b.avgScore-a.avgScore);
+    const goTo = new Set(boardStats.filter(s=>s.times>=5).slice(0,3).map(s=>s.dive));
+    const topHigh = new Set([...boardStats].sort((a,b)=>b.highScore-a.highScore).slice(0,4).map(s=>s.dive));
+
+    const tagFor = (s) => {
+      if(!s) return {t:"In training", c:theme.textMuted};
+      if(goTo.has(s.dive)) return {t:"Signature", c:theme.gold};
+      if(s.times>=5) return {t:"Solid", c:theme.success};
+      if(topHigh.has(s.dive)) return {t:"High ceiling", c:theme.gold};
+      if(s.times>=2) return {t:"Building", c:theme.textMuted};
+      return {t:"New", c:theme.textMuted};
+    };
+
+    const list = cfg.lists[h];
+    const totalDD = (list?.codes||[]).reduce((a,c)=>a+(meetDD(c)||0),0);
+    const bestTotal = diver.meetHistory
+      .filter(m=>m.height===h && typeof m.score==="number")
+      .reduce((a,m)=>Math.max(a,m.score),0);
+
+    const twisters = diver.diveStats
+      .filter(s=>getDiveGroup(s.dive)===5)
+      .sort((a,b)=>b.highScore-a.highScore);
+
+    const results = diver.meetHistory.filter(m=>m.place!=null).slice(0,10);
+    const synchro = (diver.synchroHistory||[]).slice(0,4);
+
+    const ordinal = (n) => {
+      const r10 = n % 10, r100 = n % 100;
+      if(r10===1 && r100!==11) return n+"st";
+      if(r10===2 && r100!==12) return n+"nd";
+      if(r10===3 && r100!==13) return n+"rd";
+      return n+"th";
+    };
+
+    const th = {fontSize:9,fontWeight:700,letterSpacing:"0.06em",textTransform:"uppercase",
+                color:theme.textMuted,textAlign:"left",padding:"6px 6px",whiteSpace:"nowrap"};
+    const td = {fontSize:12,padding:"7px 6px",borderTop:`1px solid ${theme.cardBorder}`,verticalAlign:"top"};
+    const numTd = {...td, textAlign:"right", fontVariantNumeric:"tabular-nums", whiteSpace:"nowrap"};
+
+    const diveRow = (code, i) => {
+      const s = statFor(code), dd = meetDD(code), tag = tagFor(s);
+      return (
+        <tr key={code+i}>
+          <td style={{...td,color:theme.textMuted,fontSize:10,width:14,paddingRight:0}}>{i!=null?i+1:""}</td>
+          <td style={td}>
+            <div style={{fontWeight:700,fontFamily:"ui-monospace,Menlo,monospace",fontSize:12.5,color:theme.text}}>{code}</div>
+            <div style={{fontSize:10.5,color:theme.textMuted,lineHeight:1.3}}>{nameFor(code)}</div>
+            <div style={{marginTop:3}}>{badge(tag.c, tag.t)}</div>
+          </td>
+          <td style={numTd}>{dd ? dd.toFixed(1) : "—"}</td>
+          <td style={{...numTd,color:theme.gold,fontWeight:700}}>{s ? s.highScore.toFixed(2) : "—"}</td>
+          <td style={numTd}>{s ? s.avgScore.toFixed(1) : "—"}</td>
+          <td style={{...numTd,color:theme.textMuted,fontSize:11}}>{s ? s.times : "—"}</td>
+        </tr>
+      );
+    };
+
+    return (
+      <div>
+        {/* Header */}
+        <div style={{...cardStyle, borderColor:theme.accent}}>
+          <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",color:theme.accent}}>
+            Evaluation dive sheet
+          </div>
+          <div style={{fontSize:20,fontWeight:800,color:theme.text,marginTop:4,letterSpacing:"-0.01em"}}>{diver.name}</div>
+          <div style={{fontSize:11.5,color:theme.textMuted,marginTop:2}}>
+            Age {diver.finaAge} · {diver.ageGroupLabel} · DiveMeets #{diver.diveMeetsNum}
+          </div>
+          <div style={{fontSize:12,color:theme.text,marginTop:10,lineHeight:1.5}}>{cfg.headline}</div>
+        </div>
+
+        {/* Board toggle */}
+        <div style={{display:"flex",gap:6,marginBottom:12}}>
+          {["1M","3M"].map(b=>(
+            <button key={b} onClick={()=>setEvalBoard(b)} style={{
+              flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,
+              background: evalBoard===b?theme.accent:theme.surface, color: evalBoard===b?"#fff":theme.textMuted,
+            }}>{b} Board</button>
+          ))}
+        </div>
+
+        {/* Competitive list */}
+        <div style={cardStyle}>
+          <div style={{fontSize:14,fontWeight:700,color:theme.text}}>{h} competitive list</div>
+          <div style={{fontSize:11,color:theme.textMuted,marginTop:2,marginBottom:6}}>{list?.note || "No list set for this board."}</div>
+          {list && (
+            <div style={{overflowX:"auto"}}>
+              <table style={{width:"100%",borderCollapse:"collapse"}}>
+                <thead><tr>
+                  <th style={{...th,width:14,paddingRight:0}}>#</th>
+                  <th style={th}>Dive</th>
+                  <th style={{...th,textAlign:"right"}}>DD</th>
+                  <th style={{...th,textAlign:"right"}}>Best</th>
+                  <th style={{...th,textAlign:"right"}}>Avg</th>
+                  <th style={{...th,textAlign:"right"}}>Mts</th>
+                </tr></thead>
+                <tbody>{list.codes.map((c,i)=>diveRow(c,i))}</tbody>
+              </table>
+            </div>
+          )}
+          {list && (
+            <div style={{display:"flex",justifyContent:"space-between",gap:10,marginTop:10,paddingTop:10,
+                         borderTop:`1px solid ${theme.cardBorder}`,fontSize:11,color:theme.textMuted}}>
+              <span>Total DD <strong style={{color:theme.text,fontSize:13}}>{totalDD.toFixed(1)}</strong></span>
+              {bestTotal>0 && <span>Best {h} meet score <strong style={{color:theme.gold,fontSize:13}}>{bestTotal.toFixed(2)}</strong></span>}
+            </div>
+          )}
+        </div>
+
+        {/* Alternates */}
+        {(cfg.alternates?.[h]||[]).length>0 && (
+          <div style={cardStyle}>
+            <div style={{fontSize:14,fontWeight:700,color:theme.text}}>Also in the bank</div>
+            <div style={{fontSize:11,color:theme.textMuted,marginTop:2,marginBottom:6}}>Competed before — available to swap in.</div>
+            <div style={{overflowX:"auto"}}>
+              <table style={{width:"100%",borderCollapse:"collapse"}}>
+                <thead><tr>
+                  <th style={{...th,width:14,paddingRight:0}}></th>
+                  <th style={th}>Dive</th>
+                  <th style={{...th,textAlign:"right"}}>DD</th>
+                  <th style={{...th,textAlign:"right"}}>Best</th>
+                  <th style={{...th,textAlign:"right"}}>Avg</th>
+                  <th style={{...th,textAlign:"right"}}>Mts</th>
+                </tr></thead>
+                <tbody>{cfg.alternates[h].filter(c=>statFor(c)).map(c=>diveRow(c,null))}</tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Twisters */}
+        <div style={cardStyle}>
+          <div style={{fontSize:14,fontWeight:700,color:theme.text}}>Twisting dives</div>
+          <div style={{fontSize:11,color:theme.textMuted,marginTop:2,marginBottom:6}}>
+            Group 5 across both boards — including the ones he trains but doesn't always compete.
+          </div>
+          {twisters.map(s=>(
+            <div key={s.dive+s.height} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 0",
+                 borderTop:`1px solid ${theme.cardBorder}`}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:700,fontFamily:"ui-monospace,Menlo,monospace",fontSize:12.5,color:theme.text}}>
+                  {s.dive} <span style={{fontSize:10,color:theme.textMuted,fontFamily:"inherit"}}>{s.height}</span>
+                </div>
+                <div style={{fontSize:10.5,color:theme.textMuted}}>{nameFor(s.dive)}</div>
+              </div>
+              <div style={{textAlign:"right",fontVariantNumeric:"tabular-nums"}}>
+                <div style={{fontSize:13,fontWeight:700,color:theme.gold}}>{s.highScore.toFixed(2)}</div>
+                <div style={{fontSize:10,color:theme.textMuted}}>{s.times} meet{s.times===1?"":"s"}</div>
+              </div>
+            </div>
+          ))}
+          {(cfg.training||[]).map(t=>(
+            <div key={t.code} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 0",
+                 borderTop:`1px solid ${theme.cardBorder}`,opacity:.85}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontWeight:700,fontFamily:"ui-monospace,Menlo,monospace",fontSize:12.5,color:theme.text}}>{t.code}</div>
+                <div style={{fontSize:10.5,color:theme.textMuted}}>{t.name}</div>
+              </div>
+              {badge(theme.textMuted, t.note)}
+            </div>
+          ))}
+        </div>
+
+        {/* Results */}
+        <div style={cardStyle}>
+          <div style={{fontSize:14,fontWeight:700,color:theme.text,marginBottom:6}}>Recent official results</div>
+          {results.map((m,i)=>(
+            <div key={i} style={{display:"flex",gap:8,alignItems:"baseline",padding:"6px 0",
+                 borderTop:i===0?"none":`1px solid ${theme.cardBorder}`}}>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:12,fontWeight:600,color:theme.text}}>{m.meet}</div>
+                <div style={{fontSize:10.5,color:theme.textMuted}}>
+                  {m.date} · {m.event}{m.round && m.round!=="single" ? ` · ${m.round}` : ""}
+                </div>
+              </div>
+              <div style={{textAlign:"right",fontVariantNumeric:"tabular-nums",whiteSpace:"nowrap"}}>
+                <div style={{fontSize:13,fontWeight:700,color:theme.text}}>{m.score?.toFixed(2)}</div>
+                <div style={{fontSize:10.5,color:theme.gold}}>{typeof m.place==="number"?ordinal(m.place):m.place}</div>
+              </div>
+            </div>
+          ))}
+          {synchro.length>0 && (
+            <>
+              <div style={{fontSize:11,fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",
+                           color:theme.textMuted,marginTop:12,marginBottom:2}}>Synchro</div>
+              {synchro.map((m,i)=>(
+                <div key={i} style={{display:"flex",gap:8,alignItems:"baseline",padding:"5px 0",
+                     borderTop:`1px solid ${theme.cardBorder}`}}>
+                  <div style={{flex:1,minWidth:0,fontSize:11.5,color:theme.text}}>
+                    {m.meet} · {m.event}{m.partner?` — w/ ${m.partner}`:""}
+                  </div>
+                  <div style={{fontSize:11.5,fontVariantNumeric:"tabular-nums",whiteSpace:"nowrap",color:theme.textMuted}}>
+                    {m.place} · {m.score?.toFixed(2)}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+
+        {/* Coach note */}
+        <div style={{...cardStyle, borderLeft:`3px solid ${theme.accent}`}}>
+          <div style={{fontSize:14,fontWeight:700,color:theme.text,marginBottom:6}}>For the coach</div>
+          <div style={{fontSize:12,color:theme.text,lineHeight:1.55,marginBottom:8}}>
+            <strong style={{color:theme.success}}>Strength.</strong> {cfg.strength}
+          </div>
+          <div style={{fontSize:12,color:theme.text,lineHeight:1.55}}>
+            <strong style={{color:theme.gold}}>Working on.</strong> {cfg.working}
+          </div>
+        </div>
+
+        <div style={{fontSize:10.5,color:theme.textMuted,lineHeight:1.5,padding:"0 2px 4px"}}>
+          Best and Avg are dive points (judges' award × DD), so they compare directly across dives.
+          Avg covers every recorded attempt including misses — it is a consistency number, not a highlight.
+          Sources: DiveLive official reports and DiveMeets.
+        </div>
+      </div>
+    );
+  };
 
   // ─── RENDER: RECOMMENDATIONS ───────────────────────────────
   const renderRecommendations = () => (
@@ -3226,6 +3501,7 @@ export default function PikeDiveTracker() {
         )}
         {activeTab==="compete" && renderCompetition()}
         {activeTab==="recommend" && renderRecommendations()}
+        {activeTab==="eval" && renderEvalSheet()}
       </div>
 
       {/* Bottom Nav */}
@@ -3250,6 +3526,9 @@ export default function PikeDiveTracker() {
         </button>
         <button onClick={()=>setActiveTab("recommend")} style={tabBtn("recommend")}>
           <Icon type="star" size={16}/> Plan
+        </button>
+        <button onClick={()=>setActiveTab("eval")} style={tabBtn("eval")}>
+          <Icon type="target" size={16}/> Eval
         </button>
       </div>
     </div>
