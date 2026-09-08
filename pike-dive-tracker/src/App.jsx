@@ -13,8 +13,8 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.8.0";
-const APP_UPDATED = "Aug 31, 2026";
+const APP_VERSION = "v1.9.0";
+const APP_UPDATED = "Sep 8, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
 const DD_TABLE = {
@@ -1123,7 +1123,7 @@ export default function PikeDiveTracker() {
         @media print{.no-print{display:none!important}@page{size:letter;margin:.35in}}
       </style></head><body>
       <div class="tip no-print">To save or share: tap the <b>Share</b> icon in Safari, then <b>Print</b>, then Share the PDF.</div>
-      <div class="hd"><div><h1>${diver.name}</h1><div class="sub">College Recruiting Profile &middot; Class of ${gradYear}</div><div class="sub">Pike Dive Academy &middot; Coach Dora Fyfe &middot; DiveMeets #${diver.diveMeetsNum}</div></div>
+      <div class="hd"><div><h1>${diver.name}</h1><div class="sub">College Recruiting Profile &middot; Class of ${gradYear}</div><div class="sub">Greenwich YMCA Marlins Diving &middot; Head Coach Dylan Korn &middot; Coach Brooke Reinfeld &middot; DiveMeets #${diver.diveMeetsNum}</div></div>
         <div class="rt">FINA Age ${diver.finaAge}<br/>${diver.ageGroupLabel}<br/>Boards: ${boards.join(" &middot; ")||"—"}</div></div>
       <div class="sec">Honors &mdash; AAU All-American${aa.length?` (&times; ${aa.length})`:""}</div>
       <div>${aa.length? aa.map(m=>`<span class="aa ${m.kind==="syn"?"aas":""}">${(m.date||"").slice(0,4)} &middot; ${m.height}${m.kind==="syn"?" Synchro":""} &middot; ${m.place}${ord(m.place)} place</span>`).join("") : '<span style="color:#888">Working toward it — top 12 individual final or top 6 synchro final at AAU Nationals.</span>'}</div>
@@ -1141,7 +1141,7 @@ export default function PikeDiveTracker() {
       <div class="sec">Competition Results</div>
       <table><thead><tr><th>Meet</th><th>Event</th><th>Date</th><th class="r">Place</th><th class="r">Score</th></tr></thead><tbody>
       ${results.map(m=>`<tr><td>${m.meet}</td><td>${m.event||""}${m.round&&m.round!=="single"?` (${m.round})`:""}</td><td>${m.date||""}</td><td class="r">${typeof m.place==="number"?m.place+ord(m.place):(m.place||"")}</td><td class="r">${m.score}</td></tr>`).join("")}</tbody></table>
-      <div class="footer">Generated ${today} &middot; Pike Dive Tracker</div>
+      <div class="footer">Generated ${today} &middot; Marlins Dive Tracker</div>
       </body></html>`;
       const blob=new Blob([html],{type:'text/html'}); const url=URL.createObjectURL(blob); window.open(url,'_blank');
     };
@@ -1175,7 +1175,7 @@ export default function PikeDiveTracker() {
             <div style={{...cardStyle, background:`linear-gradient(135deg, ${theme.card}, ${theme.accent}0f)`, border:`1px solid ${theme.accent}44`, marginBottom:12}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
                 <div><div style={{fontSize:14,fontWeight:800,color:theme.text}}>🎓 College Scouting Sheet</div>
-                  <div style={{fontSize:10,color:theme.textMuted,marginTop:1}}>{diver.name} · Class of {gradYear} · Pike Dive Academy</div></div>
+                  <div style={{fontSize:10,color:theme.textMuted,marginTop:1}}>{diver.name} · Class of {gradYear} · Greenwich YMCA Marlins</div></div>
                 <div style={{textAlign:"right",fontSize:9,color:theme.textMuted,lineHeight:1.3}}>FINA {diver.finaAge}<br/>Group {diver.ageGroup}</div>
               </div>
               <div style={{padding:"8px 10px",borderRadius:10,marginBottom:8,background: aa.length?`${theme.gold}18`:theme.surface,border:`1px solid ${aa.length?theme.gold+"55":theme.cardBorder}`}}>
@@ -2048,7 +2048,7 @@ export default function PikeDiveTracker() {
       {diver.coachDiveList && (
         <div style={{marginBottom:16}}>
           <div style={{fontSize:14,fontWeight:700,color:theme.text,marginBottom:8}}>
-            📋 Coach Dora's Working Dive List
+            📋 Coach's Working Dive List
           </div>
           {["3M","1M"].map(h=>(
             <div key={h} style={cardStyle}>
@@ -2535,7 +2535,7 @@ export default function PikeDiveTracker() {
         <div class="header">
           <div>
             <h1>${diver.name} — Practice Plan</h1>
-            <div class="meta">Pike Dive Academy · Coach: Dora Fyfe · Date: _______________ · Notes: _______________________________________________</div>
+            <div class="meta">Greenwich YMCA Marlins · Coach: Dylan Korn / Brooke Reinfeld · Date: _______________ · Notes: _______________________________________________</div>
             <div class="meta">${diver.ageGroupLabel} · FINA Age: ${diver.finaAge} · Session: 2h 45min · ${visiblePlanDives.length} dives · Last practice: ${recentSession?.date || "—"}</div>
           </div>
           ${qrDataUrl ? `<div><img src="${qrDataUrl}" class="qr"/><div class="qr-label">Scan to log</div></div>` : ""}
@@ -2734,7 +2734,7 @@ export default function PikeDiveTracker() {
           cursor:"pointer",marginTop:8,marginBottom:16,display:"flex",alignItems:"center",
           justifyContent:"center",gap:8,
         }}>
-          <Icon type="printer" size={18}/> Print for Coach Dora ({printTotalDives} dives)
+          <Icon type="printer" size={18}/> Print for Coach ({printTotalDives} dives)
         </button>
       </div>
     );
@@ -3431,7 +3431,7 @@ export default function PikeDiveTracker() {
           <div style={{
             fontSize:11, fontWeight:600, letterSpacing:"0.32em", color:theme.textMuted, marginTop:4,
             animation:"dtSplashRise 0.6s ease 0.5s both",
-          }}>PIKE DIVE ACADEMY</div>
+          }}>GREENWICH YMCA MARLINS</div>
           {/* Loading shimmer bar */}
           <div style={{
             width:120, height:3, borderRadius:3, overflow:"hidden", marginTop:26,
@@ -3461,7 +3461,7 @@ export default function PikeDiveTracker() {
                 background:`linear-gradient(135deg, ${theme.accent}, #a78bfa)`,
                 WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",
               }}>Dive Tracker</div>
-              <div style={{fontSize:10,color:theme.textMuted,letterSpacing:"0.05em"}}>PIKE DIVE ACADEMY</div>
+              <div style={{fontSize:10,color:theme.textMuted,letterSpacing:"0.05em"}}>GREENWICH YMCA MARLINS</div>
               <div style={{fontSize:8,color:theme.textMuted,opacity:0.7,marginTop:1}}>{APP_VERSION} · {APP_UPDATED}</div>
             </div>
           </div>

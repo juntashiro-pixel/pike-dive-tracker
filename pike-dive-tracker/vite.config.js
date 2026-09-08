@@ -9,9 +9,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Pike Dive Tracker',
+        name: 'Marlins Dive Tracker',
         short_name: 'DiveTracker',
-        description: 'Track diving progress for Pike Dive Academy',
+        description: 'Track diving progress for the Greenwich YMCA Marlins',
         theme_color: '#0c1220',
         background_color: '#0c1220',
         display: 'standalone',
