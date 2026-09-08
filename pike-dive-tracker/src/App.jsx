@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.9.0";
+const APP_VERSION = "v1.9.1";
 const APP_UPDATED = "Sep 8, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -127,15 +127,15 @@ const DIVELIVE_RESULTS = [
   {diverId:"hayden",meet:"2026 AAU Nationals",date:"2026-07-16",event:"Boys 12 1M",height:"1M",round:"prelim",place:17,score:134.40,source:"divelive",dives:[{code:"201A",dd:1.7,net:14.00,award:23.80,role:"vol"},{code:"401C",dd:1.4,net:14.50,award:20.30,role:"vol"},{code:"301C",dd:1.6,net:8.50,award:13.60,role:"vol"},{code:"5211A",dd:1.8,net:10.50,award:18.90,role:"vol"},{code:"102A",dd:1.6,net:11.50,award:18.40,role:"vol"},{code:"202C",dd:1.5,net:6.50,award:9.75,role:"opt"},{code:"5122D",dd:1.9,net:5.50,award:10.45,role:"opt"},{code:"103C",dd:1.6,net:12.00,award:19.20,role:"opt"}]},
 ];
 
-// ─── EVAL SHEET (tryout / new-coach dive list) ────────────────
+// ─── COACH DIVE SHEET (lives inside the Stats tab) ────────────
 // Ordered exactly as each diver competes the list. Codes only — every
-// number on the Eval page is read live from diveStats, so it refreshes
+// number on the sheet is read live from diveStats, so it refreshes
 // itself as new meets are added. No numbers are stored here.
 const EVAL_SHEET = {
   hayden: {
     headline: "Best meet: 243.20 — 3rd, Group C Boys 1M, JDA Summer Invite (Jun 2026). Clears the AAU Group C 1M qualifying standard of 210.",
     lists: {
-      "1M": { note: "8 dives — the order he swam at JDA Summer Invite, his best meet.",
+      "1M": { note: "8 dives — the order he competed at JDA Summer Invite, his best meet.",
               codes: ["103C","201A","401C","301C","5211A","102A","202C","5122D"] },
       "3M": { note: "Fewer 3M meets, but the scores are there.",
               codes: ["101A","201A","401C","5211A","202C","102C"] },
@@ -507,6 +507,7 @@ export default function PikeDiveTracker() {
   const [activeDiver, setActiveDiver] = useState("hayden");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [evalBoard, setEvalBoard] = useState("1M");
+  const [showCoachSheet, setShowCoachSheet] = useState(false);
   const [practiceView, setPracticeView] = useState("log");
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
   const [heightFilter, setHeightFilter] = useState("ALL");
@@ -1797,11 +1798,26 @@ export default function PikeDiveTracker() {
         </div>
         );
       })}
+
+      {/* Coach dive sheet — collapsed by default */}
+      <div style={{...cardStyle, marginTop:16, padding:0, overflow:"hidden"}}>
+        <button onClick={()=>setShowCoachSheet(v=>!v)} style={{
+          width:"100%",display:"flex",alignItems:"center",justifyContent:"space-between",
+          padding:"12px 14px",background:"none",border:"none",cursor:"pointer",color:theme.text,textAlign:"left",
+        }}>
+          <div>
+            <div style={{fontSize:13,fontWeight:700}}>📋 Coach dive sheet</div>
+            <div style={{fontSize:10.5,color:theme.textMuted,marginTop:2}}>Competition list by board, with live averages — hand this to a coach</div>
+          </div>
+          <span style={{fontSize:12,color:theme.textMuted}}>{showCoachSheet ? "▲" : "▼"}</span>
+        </button>
+        {showCoachSheet && <div style={{padding:"0 14px 14px"}}>{renderEvalSheet()}</div>}
+      </div>
     </div>
   );
 
   // ─── RENDER: EVAL SHEET ────────────────────────────────────
-  // A clean dive list to hand a coach at a tryout or evaluation.
+  // A clean dive list to hand a coach. Rendered as a collapsible section at the bottom of Stats.
   // Everything is computed from diveStats/meetHistory, so it stays current.
   const renderEvalSheet = () => {
     const cfg = EVAL_SHEET[activeDiver];
@@ -1883,7 +1899,7 @@ export default function PikeDiveTracker() {
         {/* Header */}
         <div style={{...cardStyle, borderColor:theme.accent}}>
           <div style={{fontSize:10,fontWeight:700,letterSpacing:"0.14em",textTransform:"uppercase",color:theme.accent}}>
-            Evaluation dive sheet
+            Coach dive sheet
           </div>
           <div style={{fontSize:20,fontWeight:800,color:theme.text,marginTop:4,letterSpacing:"-0.01em"}}>{diver.name}</div>
           <div style={{fontSize:11.5,color:theme.textMuted,marginTop:2}}>
@@ -3501,7 +3517,6 @@ export default function PikeDiveTracker() {
         )}
         {activeTab==="compete" && renderCompetition()}
         {activeTab==="recommend" && renderRecommendations()}
-        {activeTab==="eval" && renderEvalSheet()}
       </div>
 
       {/* Bottom Nav */}
@@ -3526,9 +3541,6 @@ export default function PikeDiveTracker() {
         </button>
         <button onClick={()=>setActiveTab("recommend")} style={tabBtn("recommend")}>
           <Icon type="star" size={16}/> Plan
-        </button>
-        <button onClick={()=>setActiveTab("eval")} style={tabBtn("eval")}>
-          <Icon type="target" size={16}/> Eval
         </button>
       </div>
     </div>
