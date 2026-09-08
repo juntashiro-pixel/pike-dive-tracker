@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.9.1";
+const APP_VERSION = "v1.9.2";
 const APP_UPDATED = "Sep 8, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -508,6 +508,7 @@ export default function PikeDiveTracker() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [evalBoard, setEvalBoard] = useState("1M");
   const [showCoachSheet, setShowCoachSheet] = useState(false);
+  const [showScouting, setShowScouting] = useState(false);
   const [practiceView, setPracticeView] = useState("log");
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
   const [heightFilter, setHeightFilter] = useState("ALL");
@@ -1149,6 +1150,17 @@ export default function PikeDiveTracker() {
 
     return (
       <div>
+        {/* Strength / Working on — coach's read on this diver */}
+        {EVAL_SHEET[activeDiver] && (
+          <div style={{...cardStyle, borderLeft:`3px solid ${theme.accent}`, marginBottom:12}}>
+            <div style={{fontSize:12,color:theme.text,lineHeight:1.55,marginBottom:8}}>
+              <strong style={{color:theme.success}}>Strength.</strong> {EVAL_SHEET[activeDiver].strength}
+            </div>
+            <div style={{fontSize:12,color:theme.text,lineHeight:1.55}}>
+              <strong style={{color:theme.gold}}>Working on.</strong> {EVAL_SHEET[activeDiver].working}
+            </div>
+          </div>
+        )}
         {(() => {
           const mh = diver.meetHistory || [];
           const sh = diver.synchroHistory || [];
@@ -1174,11 +1186,12 @@ export default function PikeDiveTracker() {
           const Stat=({label,value,sub,color})=>(<div style={{flex:1,textAlign:"center",padding:"7px 2px",minWidth:0}}><div style={{fontSize:8,color:theme.textMuted,textTransform:"uppercase",letterSpacing:"0.04em"}}>{label}</div><div style={{fontSize:17,fontWeight:800,color:color||theme.text}}>{value}</div>{sub?<div style={{fontSize:8,color:theme.textMuted,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{sub}</div>:null}</div>);
           return (
             <div style={{...cardStyle, background:`linear-gradient(135deg, ${theme.card}, ${theme.accent}0f)`, border:`1px solid ${theme.accent}44`, marginBottom:12}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+              <div onClick={()=>setShowScouting(v=>!v)} style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:showScouting?8:0,cursor:"pointer"}}>
                 <div><div style={{fontSize:14,fontWeight:800,color:theme.text}}>🎓 College Scouting Sheet</div>
-                  <div style={{fontSize:10,color:theme.textMuted,marginTop:1}}>{diver.name} · Class of {gradYear} · Greenwich YMCA Marlins</div></div>
-                <div style={{textAlign:"right",fontSize:9,color:theme.textMuted,lineHeight:1.3}}>FINA {diver.finaAge}<br/>Group {diver.ageGroup}</div>
+                  <div style={{fontSize:10,color:theme.textMuted,marginTop:1}}>{diver.name} · Class of {gradYear} · Greenwich YMCA Marlins{aa.length?` · ${aa.length}× AAU All-American`:""}</div></div>
+                <div style={{textAlign:"right",fontSize:9,color:theme.textMuted,lineHeight:1.3}}>FINA {diver.finaAge}<br/>Group {diver.ageGroup}<br/><span style={{fontSize:11}}>{showScouting?"▲":"▼"}</span></div>
               </div>
+              {showScouting && (<>
               <div style={{padding:"8px 10px",borderRadius:10,marginBottom:8,background: aa.length?`${theme.gold}18`:theme.surface,border:`1px solid ${aa.length?theme.gold+"55":theme.cardBorder}`}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                   <div style={{fontSize:12,fontWeight:700,color:aa.length?theme.gold:theme.textMuted}}>🏅 AAU All-American{aa.length?` × ${aa.length}`:""}</div>
@@ -1217,6 +1230,7 @@ export default function PikeDiveTracker() {
               </div>)}
               <button onClick={exportScoutingSheet} style={{width:"100%",marginTop:6,padding:"9px",borderRadius:9,border:`1px solid ${theme.accent}66`,background:`${theme.accent}18`,color:theme.accent,fontWeight:700,fontSize:12,cursor:"pointer"}}>📄 Export one-page recruiting profile</button>
               <div style={{fontSize:8,color:theme.textMuted,marginTop:8,fontStyle:"italic",textAlign:"center"}}>Updates automatically as new results are added.</div>
+              </>)}
             </div>
           );
         })()}
@@ -2035,17 +2049,6 @@ export default function PikeDiveTracker() {
               ))}
             </>
           )}
-        </div>
-
-        {/* Coach note */}
-        <div style={{...cardStyle, borderLeft:`3px solid ${theme.accent}`}}>
-          <div style={{fontSize:14,fontWeight:700,color:theme.text,marginBottom:6}}>For the coach</div>
-          <div style={{fontSize:12,color:theme.text,lineHeight:1.55,marginBottom:8}}>
-            <strong style={{color:theme.success}}>Strength.</strong> {cfg.strength}
-          </div>
-          <div style={{fontSize:12,color:theme.text,lineHeight:1.55}}>
-            <strong style={{color:theme.gold}}>Working on.</strong> {cfg.working}
-          </div>
         </div>
 
         <div style={{fontSize:10.5,color:theme.textMuted,lineHeight:1.5,padding:"0 2px 4px"}}>
