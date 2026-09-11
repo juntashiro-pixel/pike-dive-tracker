@@ -13,8 +13,8 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.10.0";
-const APP_UPDATED = "Sep 8, 2026";
+const APP_VERSION = "v1.10.1";
+const APP_UPDATED = "Sep 11, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
 const DD_TABLE = {
@@ -549,7 +549,7 @@ export default function PikeDiveTracker() {
     return [];
   };
   const [unofficialScores, setUnofficialScores] = useState(()=>loadUnofficial("hayden"));
-  const [liveSheet, setLiveSheet] = useState(()=>freshSheet("hayden", 3, true));
+  const [liveSheet, setLiveSheet] = useState(()=>freshSheet("hayden", 3, false)); // collapsed by default; tap header to open
 
   // Event rule presets by age group + height
   const ALL_EVENT_RULES = {
@@ -658,7 +658,7 @@ export default function PikeDiveTracker() {
     setCompDiveOverrides(prefs.compOverrides);
     setRemovedCompDives(prefs.removedComp);
     setUnofficialScores(loadUnofficial(activeDiver));
-    setLiveSheet(freshSheet(activeDiver, 3, activeDiver==="hayden"));
+    setLiveSheet(freshSheet(activeDiver, 3, false));
   }, [activeDiver]);
 
   const diver = DIVERS[activeDiver];
