@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.10.2";
+const APP_VERSION = "v1.10.3";
 const APP_UPDATED = "Sep 11, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -509,7 +509,7 @@ export default function PikeDiveTracker() {
   const [evalBoard, setEvalBoard] = useState("1M");
   const [showCoachSheet, setShowCoachSheet] = useState(false);
   const [showScouting, setShowScouting] = useState(false);
-  const [collapsedGroups, setCollapsedGroups] = useState({}); // Stats tab: dive groups (Forward/Back/…) folded by the user
+  const [expandedGroups, setExpandedGroups] = useState({}); // Stats tab: dive groups start folded (top 2 by avg shown); tap header to expand
   const [practiceView, setPracticeView] = useState("log");
   const [showPractice, setShowPractice] = useState(false); // Practice log/print sheet, tucked into the Plan tab
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
@@ -1242,19 +1242,21 @@ export default function PikeDiveTracker() {
         </div>
         {[1,2,3,4,5].map(g => {
           if(!grouped[g]?.length) return null;
-          const folded = !!collapsedGroups[g];
+          const folded = !expandedGroups[g];
+          const shown = folded ? [...grouped[g]].sort((a,b)=>(b.avgScore||0)-(a.avgScore||0)).slice(0,2) : grouped[g];
+          const hidden = grouped[g].length - shown.length;
           return (
-            <div key={g} style={{marginBottom:folded?6:12}}>
-              <div onClick={()=>setCollapsedGroups(c=>({...c,[g]:!c[g]}))} style={{
-                display:"flex",alignItems:"center",gap:8,marginBottom:folded?0:6,
+            <div key={g} style={{marginBottom:12}}>
+              <div onClick={()=>setExpandedGroups(c=>({...c,[g]:!c[g]}))} style={{
+                display:"flex",alignItems:"center",gap:8,marginBottom:6,
                 padding:"6px 0",borderBottom:`2px solid ${GROUP_COLORS[g]}`,cursor:"pointer",
               }}>
                 <span style={{width:10,height:10,borderRadius:"50%",background:GROUP_COLORS[g]}}/>
                 <span style={{fontSize:13,fontWeight:700,color:theme.text}}>{GROUP_NAMES[g]}</span>
                 <span style={{fontSize:10,color:theme.textMuted}}>{grouped[g].length} dives</span>
-                <span style={{marginLeft:"auto",fontSize:12,color:theme.textMuted}}>{folded?"▸":"▾"}</span>
+                <span style={{marginLeft:"auto",fontSize:10,color:theme.textMuted}}>{folded?"top 2 ▸":"all ▾"}</span>
               </div>
-              {!folded && grouped[g].map((s,i) => {
+              {shown.map((s,i) => {
                 const dd = DD_TABLE[s.dive];
                 const group = getDiveGroup(s.dive);
                 const freqKey = `${s.dive}-${s.height}`;
@@ -1380,6 +1382,12 @@ export default function PikeDiveTracker() {
                   </div>
                 );
               })}
+              {folded && hidden>0 && (
+                <button onClick={()=>setExpandedGroups(c=>({...c,[g]:true}))} style={{
+                  width:"100%",padding:"6px",marginTop:2,borderRadius:8,border:`1px dashed ${theme.cardBorder}`,
+                  background:"transparent",color:theme.textMuted,fontSize:11,cursor:"pointer",
+                }}>+ {hidden} more {GROUP_NAMES[g].toLowerCase()} {hidden===1?"dive":"dives"}</button>
+              )}
             </div>
           );
         })}
