@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.10.1";
+const APP_VERSION = "v1.10.2";
 const APP_UPDATED = "Sep 11, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -509,6 +509,7 @@ export default function PikeDiveTracker() {
   const [evalBoard, setEvalBoard] = useState("1M");
   const [showCoachSheet, setShowCoachSheet] = useState(false);
   const [showScouting, setShowScouting] = useState(false);
+  const [collapsedGroups, setCollapsedGroups] = useState({}); // Stats tab: dive groups (Forward/Back/…) folded by the user
   const [practiceView, setPracticeView] = useState("log");
   const [showPractice, setShowPractice] = useState(false); // Practice log/print sheet, tucked into the Plan tab
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
@@ -1241,17 +1242,19 @@ export default function PikeDiveTracker() {
         </div>
         {[1,2,3,4,5].map(g => {
           if(!grouped[g]?.length) return null;
+          const folded = !!collapsedGroups[g];
           return (
-            <div key={g} style={{marginBottom:12}}>
-              <div style={{
-                display:"flex",alignItems:"center",gap:8,marginBottom:6,
-                padding:"6px 0",borderBottom:`2px solid ${GROUP_COLORS[g]}`,
+            <div key={g} style={{marginBottom:folded?6:12}}>
+              <div onClick={()=>setCollapsedGroups(c=>({...c,[g]:!c[g]}))} style={{
+                display:"flex",alignItems:"center",gap:8,marginBottom:folded?0:6,
+                padding:"6px 0",borderBottom:`2px solid ${GROUP_COLORS[g]}`,cursor:"pointer",
               }}>
                 <span style={{width:10,height:10,borderRadius:"50%",background:GROUP_COLORS[g]}}/>
                 <span style={{fontSize:13,fontWeight:700,color:theme.text}}>{GROUP_NAMES[g]}</span>
                 <span style={{fontSize:10,color:theme.textMuted}}>{grouped[g].length} dives</span>
+                <span style={{marginLeft:"auto",fontSize:12,color:theme.textMuted}}>{folded?"▸":"▾"}</span>
               </div>
-              {grouped[g].map((s,i) => {
+              {!folded && grouped[g].map((s,i) => {
                 const dd = DD_TABLE[s.dive];
                 const group = getDiveGroup(s.dive);
                 const freqKey = `${s.dive}-${s.height}`;
