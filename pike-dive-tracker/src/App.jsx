@@ -13,7 +13,7 @@ import {
 const FIREBASE_READY = isFirebaseConfigured();
 
 // ─── APP VERSION (bump on each deploy so you can confirm the live build) ─
-const APP_VERSION = "v1.9.2";
+const APP_VERSION = "v1.10.0";
 const APP_UPDATED = "Sep 8, 2026";
 
 // ─── DD TABLE (FINA) ──────────────────────────────────────────
@@ -92,8 +92,21 @@ const AAU_QUALIFYING = {
   A: { label: "Group A (16-18)", boys: { "1M": { score: 365, dives: 10 }, "3M": { score: 390, dives: 10 }, "Platform": { score: 310, dives: 9 } }, girls: { "1M": { score: 340, dives: 9 }, "3M": { score: 350, dives: 9 }, "Platform": { score: 295, dives: 8 } } },
 };
 
-// ─── UPCOMING MEETS ──────────────────────────────────────────
-const UPCOMING_MEETS = [];
+// ─── 2026–27 SEASON SCHEDULE (Greenwich YMCA Marlins) ────────
+// Source: Marlins Google Calendar + marlinsdiveclub.com/session-calendars.
+// AAU wraps each season at Summer Nationals (July); the new season starts in Sept.
+// type: "meet" = competition · "team" = club event · "goal" = season target (dates TBA).
+// Add new meets here as the Marlins publish them — past dates hide automatically.
+const SEASON_LABEL = "2026–27 Season";
+const SEASON_MEETS = [
+  { date:"2026-10-31", name:"All JO Halloween Party", location:"Greenwich YMCA", type:"team", time:"8–10am", who:"All JO" },
+  { date:"2026-11-21", name:"Marlins Cold Turkey Invite", location:"Greenwich YMCA, Greenwich CT", type:"meet", who:"JO1 / JO2 / JO H", note:"Home meet · Sat Nov 21 (Level 2/3 session is Fri Nov 20)" },
+  { date:"2026-12-19", name:"All JO Holiday Party", location:"Greenwich YMCA", type:"team", time:"8–10am", who:"All JO" },
+  { date:"2027-07-15", name:"2027 AAU Nationals", location:"TBA", type:"goal", who:"Qualify by AAU age group", tba:true, note:"Dates & site not yet announced — mid-July is typical" },
+];
+const _todayISO = new Date().toISOString().slice(0,10);
+// Meets still ahead of us (team events + goals included); powers the Home "UPCOMING" card and Compete tab.
+const UPCOMING_MEETS = SEASON_MEETS.filter(m => m.date >= _todayISO).map(m => ({ ...m, goal: m.type==="goal" }));
 
 // ─── TODAY'S MEET DIVE LIST (edit this each meet day) ────────
 // Pre-loads the Live Scoring calculator so you only enter judge scores.
@@ -176,12 +189,6 @@ const DIVERS = {
       "1M": { score: 210, dives: 8 },
       "3M": { score: 225, dives: 8 }
     },
-    meetSchedule: {
-      meet: "AAU National Championships", location: "Fort Lauderdale, FL", dates: "Jul 16–23, 2026",
-      events: [
-        { date:"2026-07-16", day:"Thu", event:"Group C Boys 1m (12-13)", height:"1M", note:"Prelims AM · Finals PM" },
-      ],
-    },
     meetHistory: [
       {meet:"Knight Invite",date:"2025-01-21",event:"Group C Boys 1m (12-13)",height:"1M",place:6,score:143.05},
       {meet:"Long Island Divers Invitational",date:"2025-01-17",event:"Group C Boys 1m (12-13)",height:"1M",place:2,score:182.10},
@@ -245,13 +252,6 @@ const DIVERS = {
     qualifying: {
       "1M": { score: null, note: "No minimum (coach discretion)" },
       "3M": { score: null, note: "No minimum (coach discretion)" }
-    },
-    meetSchedule: {
-      meet: "AAU National Championships", location: "Fort Lauderdale, FL", dates: "Jul 16–23, 2026",
-      events: [
-        { date:"2026-07-16", day:"Thu", event:"Group E Boys 1m (9 & Under)", height:"1M", note:"Prelims AM · Finals PM" },
-        { date:"2026-07-17", day:"Fri", event:"Group E Boys 3m (9 & Under)", height:"3M", note:"Prelims AM · Finals PM" },
-      ],
     },
     // Coach's current working dive lists from the handwritten sheet
     coachDiveList: {
@@ -510,6 +510,7 @@ export default function PikeDiveTracker() {
   const [showCoachSheet, setShowCoachSheet] = useState(false);
   const [showScouting, setShowScouting] = useState(false);
   const [practiceView, setPracticeView] = useState("log");
+  const [showPractice, setShowPractice] = useState(false); // Practice log/print sheet, tucked into the Plan tab
   const [practiceLog, setPracticeLog] = useState(initPracticeLog);
   const [heightFilter, setHeightFilter] = useState("ALL");
   const [showAddPractice, setShowAddPractice] = useState(false);
@@ -885,16 +886,16 @@ export default function PikeDiveTracker() {
         <div style={{...cardStyle,padding:"10px 14px"}}>
           <div style={{fontSize:11,fontWeight:700,color:theme.textMuted,marginBottom:6,letterSpacing:"0.04em"}}>UPCOMING</div>
           <div style={{display:"flex",gap:6}}>
-            {UPCOMING_MEETS.map((m,i)=>(
+            {UPCOMING_MEETS.filter(m=>m.type!=="team").slice(0,3).map((m,i)=>(
               <div key={i} style={{
                 flex:1,padding:"8px 6px",borderRadius:8,textAlign:"center",
                 background: m.goal ? `${theme.gold}12` : theme.surface,
                 border: `1px solid ${m.goal ? theme.gold+"33" : theme.cardBorder}`,
               }}>
                 <div style={{fontSize:10,fontWeight:700,color: m.goal ? theme.gold : theme.text,lineHeight:1.3}}>
-                  {m.goal ? "🎯 " : ""}{m.name.replace("2026 ","").replace(" Championships","")}
+                  {m.goal ? "🎯 " : m.type==="team" ? "🎉 " : ""}{m.name.replace(/^20\d\d /,"").replace(" Championships","")}
                 </div>
-                <div style={{fontSize:9,color:theme.textMuted,marginTop:2}}>{m.date}</div>
+                <div style={{fontSize:9,color:theme.textMuted,marginTop:2}}>{m.tba ? "Jul 2027 · TBA" : m.date}</div>
                 <div style={{fontSize:9,color:theme.textMuted}}>{m.location.split(",")[0]}</div>
               </div>
             ))}
@@ -1084,11 +1085,6 @@ export default function PikeDiveTracker() {
       });
     });
 
-    // DD lookup results
-    const ddResults = ddLookup.length >= 2 ? Object.entries(DD_TABLE)
-      .filter(([code, info]) => code.toLowerCase().includes(ddLookup.toLowerCase()) || info.name.toLowerCase().includes(ddLookup.toLowerCase()))
-      .slice(0, 6) : [];
-
     const exportScoutingSheet = () => {
       const mh = diver.meetHistory || [], sh = diver.synchroHistory || [];
       const gradYear=(diver.birthYear||2007)+18;
@@ -1234,28 +1230,6 @@ export default function PikeDiveTracker() {
             </div>
           );
         })()}
-                {/* DD Lookup Tool */}
-        <div style={{...cardStyle,padding:"10px 12px",marginBottom:12}}>
-          <div style={{fontSize:11,fontWeight:700,color:theme.text,marginBottom:4}}>🔍 DD Lookup</div>
-          <input placeholder="Search any dive code or name..." value={ddLookup}
-            onChange={e=>setDdLookup(e.target.value)}
-            style={{width:"100%",padding:8,borderRadius:8,border:`1px solid ${theme.cardBorder}`,background:theme.surface,color:theme.text,fontSize:12,boxSizing:"border-box"}}
-          />
-          {ddResults.length > 0 && (
-            <div style={{marginTop:6}}>
-              {ddResults.map(([code, info]) => (
-                <div key={code} style={{display:"flex",alignItems:"center",gap:6,padding:"4px 0",borderBottom:`1px solid ${theme.cardBorder}`}}>
-                  <span style={{width:6,height:6,borderRadius:"50%",background:GROUP_COLORS[getDiveGroup(code)],flexShrink:0}}/>
-                  <span style={{fontSize:12,fontWeight:700,color:theme.text,width:50}}>{code}</span>
-                  <span style={{fontSize:10,color:theme.textMuted,flex:1}}>{info.name}</span>
-                  <span style={{fontSize:10,fontWeight:600,color:theme.accent}}>1M: {info["1M"]}</span>
-                  <span style={{fontSize:10,fontWeight:600,color:"#a78bfa"}}>3M: {info["3M"]}</span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         <div style={{display:"flex",gap:6,marginBottom:12}}>
           {["ALL","1M","3M"].map(h=>(
             <button key={h} onClick={()=>setHeightFilter(h)} style={{
@@ -2063,6 +2037,22 @@ export default function PikeDiveTracker() {
   // ─── RENDER: RECOMMENDATIONS ───────────────────────────────
   const renderRecommendations = () => (
     <div>
+      {/* ─── Practice log & print sheet (collapsed by default) ─── */}
+      <div style={{...cardStyle,padding:0,overflow:"hidden"}}>
+        <button onClick={()=>setShowPractice(v=>!v)} style={{width:"100%",display:"flex",justifyContent:"space-between",alignItems:"center",padding:"12px 14px",background:"transparent",border:"none",cursor:"pointer",color:theme.text}}>
+          <span style={{fontSize:14,fontWeight:800,display:"flex",alignItems:"center",gap:6}}><Icon type="clipboard" size={14}/> Practice Log & Print Sheet</span>
+          <span style={{fontSize:10,color:theme.textMuted}}>{practiceLog.filter(p=>p.diverId===diver.id).length} sessions · {showPractice ? "▲ hide" : "▼ open"}</span>
+        </button>
+        {showPractice && (
+          <div style={{padding:"0 12px 12px"}}>
+            <div style={{display:"flex",gap:6,marginBottom:12}}>
+              <button onClick={()=>setPracticeView("log")} style={{flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:practiceView==="log"?theme.accent:theme.surface,color:practiceView==="log"?"#fff":theme.textMuted}}>Practice Log</button>
+              <button onClick={()=>setPracticeView("print")} style={{flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:practiceView==="print"?theme.accent:theme.surface,color:practiceView==="print"?"#fff":theme.textMuted}}>Print Sheet</button>
+            </div>
+            {practiceView==="log" ? renderPracticeLog() : renderPracticePlan()}
+          </div>
+        )}
+      </div>
       {/* Coach's Working Dive List (Gale) */}
       {diver.coachDiveList && (
         <div style={{marginBottom:16}}>
@@ -2932,40 +2922,64 @@ export default function PikeDiveTracker() {
     );
   };
 
-  // ─── RENDER: MEET SCHEDULE (per diver) ─────────────────────
+  // ─── RENDER: SEASON SCHEDULE (upcoming meets, auto-hides past) ──
   const renderMeetSchedule = () => {
-    const sched = diver.meetSchedule;
-    if(!sched || !sched.events || !sched.events.length) return null;
     const fmt = (iso) => { const [y,m,dd]=iso.split("-").map(Number); return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m-1]+" "+dd; };
+    const dow = (iso) => { const [y,m,dd]=iso.split("-").map(Number); return ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][new Date(y,m-1,dd).getDay()]; };
+    const daysUntil = (iso) => { const [y,m,dd]=iso.split("-").map(Number); const t=new Date(); t.setHours(0,0,0,0); return Math.round((new Date(y,m-1,dd)-t)/86400000); };
+    const upcoming = UPCOMING_MEETS;
+    const nextMeet = upcoming.find(m => m.type==="meet");
+    const first = diver.name.split(" ")[0];
     return (
       <div style={cardStyle}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
-          <div style={{fontSize:14,fontWeight:800,color:theme.text}}>📅 {sched.meet}</div>
-          <span style={{fontSize:9,fontWeight:600,padding:"2px 8px",borderRadius:8,background:`${theme.gold}22`,color:theme.gold}}>{sched.dates}</span>
+          <div style={{fontSize:14,fontWeight:800,color:theme.text}}>📅 {SEASON_LABEL}</div>
+          <span style={{fontSize:9,fontWeight:600,padding:"2px 8px",borderRadius:8,background:`${theme.accent}22`,color:theme.accent}}>Marlins JO2</span>
         </div>
-        <div style={{fontSize:10,color:theme.textMuted,marginBottom:10}}>{sched.location} · {diver.name.split(" ")[0]}'s events</div>
-        {sched.events.map((ev,i)=>(
-          <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 10px",borderRadius:9,background:theme.surface,marginBottom:6,border:`1px solid ${theme.cardBorder}`}}>
-            <div style={{textAlign:"center",minWidth:42}}>
-              <div style={{fontSize:9,color:theme.textMuted,fontWeight:700,textTransform:"uppercase"}}>{ev.day}</div>
-              <div style={{fontSize:13,fontWeight:800,color:theme.accent}}>{fmt(ev.date)}</div>
+        <div style={{fontSize:10,color:theme.textMuted,marginBottom:10}}>
+          {nextMeet ? `Next meet: ${nextMeet.name} · ${daysUntil(nextMeet.date)} days out` : "No meets scheduled yet — check back as the Marlins publish dates"}
+        </div>
+        {upcoming.length===0 && <div style={{fontSize:11,color:theme.textMuted,padding:"8px 0"}}>Nothing on the calendar yet.</div>}
+        {upcoming.map((ev,i)=>{
+          const isNext = nextMeet && ev===nextMeet;
+          const isTeam = ev.type==="team";
+          const isGoal = ev.type==="goal";
+          const dl = daysUntil(ev.date);
+          const accent = isGoal ? theme.gold : isTeam ? theme.textMuted : theme.accent;
+          return (
+            <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"9px 10px",borderRadius:9,marginBottom:6,
+              background: isNext ? `${theme.accent}12` : theme.surface,
+              border:`1px solid ${isNext ? theme.accent+"55" : isGoal ? theme.gold+"33" : theme.cardBorder}`,
+              opacity: isTeam ? 0.75 : 1}}>
+              <div style={{textAlign:"center",minWidth:42}}>
+                <div style={{fontSize:9,color:theme.textMuted,fontWeight:700,textTransform:"uppercase"}}>{ev.tba ? "TBA" : dow(ev.date)}</div>
+                <div style={{fontSize:13,fontWeight:800,color:accent}}>{ev.tba ? "Jul" : fmt(ev.date)}</div>
+              </div>
+              <div style={{width:1,alignSelf:"stretch",background:theme.cardBorder}}/>
+              <div style={{flex:1,minWidth:0}}>
+                <div style={{fontSize:12,fontWeight:700,color:theme.text}}>{isGoal ? "🎯 " : isTeam ? "🎉 " : "🏊 "}{ev.name}</div>
+                <div style={{fontSize:9,color:theme.textMuted,marginTop:1}}>{ev.location}{ev.time ? ` · ${ev.time}` : ""}{ev.who ? ` · ${ev.who}` : ""}</div>
+                {ev.note && <div style={{fontSize:9,color:theme.textMuted,marginTop:1,fontStyle:"italic"}}>{ev.note}</div>}
+              </div>
+              {!ev.tba && (
+                <span style={{fontSize:10,fontWeight:800,color:isNext?"#fff":accent,padding:"3px 8px",borderRadius:7,background:isNext?theme.accent:`${accent}22`,whiteSpace:"nowrap"}}>
+                  {dl===0 ? "Today" : dl===1 ? "Tomorrow" : `${dl}d`}
+                </span>
+              )}
             </div>
-            <div style={{width:1,alignSelf:"stretch",background:theme.cardBorder}}/>
-            <div style={{flex:1,minWidth:0}}>
-              <div style={{fontSize:12,fontWeight:700,color:theme.text}}>{ev.event}</div>
-              <div style={{fontSize:9,color:theme.textMuted,marginTop:1}}>{ev.note}</div>
-            </div>
-            <span style={{fontSize:11,fontWeight:800,color:theme.accent,padding:"3px 9px",borderRadius:7,background:theme.accentGlow}}>{ev.height}</span>
-          </div>
-        ))}
-        <div style={{fontSize:8,color:theme.textMuted,marginTop:2,opacity:0.7}}>Days from official AAU schedule · times not published (prelims morning, finals afternoon/evening)</div>
+          );
+        })}
+        <div style={{fontSize:8,color:theme.textMuted,marginTop:2,opacity:0.7}}>From the Marlins calendar · past events drop off automatically · {first} & Gale are both JO2</div>
       </div>
     );
   };
 
   const renderCompetition = () => {
     const d = diver;
-    const nextMeet = UPCOMING_MEETS.find(m => !m.goal) || UPCOMING_MEETS[0];
+    const nextMeet = UPCOMING_MEETS.find(m => m.type==="meet") || UPCOMING_MEETS.find(m => !m.goal) || UPCOMING_MEETS[0];
+    const ddResults = ddLookup.length >= 2 ? Object.entries(DD_TABLE)
+      .filter(([code, info]) => code.toLowerCase().includes(ddLookup.toLowerCase()) || info.name.toLowerCase().includes(ddLookup.toLowerCase()))
+      .slice(0, 6) : [];
 
     return (
       <div>
@@ -2980,7 +2994,7 @@ export default function PikeDiveTracker() {
             {nextMeet && (
               <span style={{fontSize:9,fontWeight:600,padding:"2px 8px",borderRadius:8,
                 background:`${theme.gold}22`,color:theme.gold,
-              }}>Next: {nextMeet.name.replace("2026 ","")}</span>
+              }}>Next: {nextMeet.name.replace(/^20\d\d /,"")}</span>
             )}
           </div>
           
@@ -3286,6 +3300,27 @@ export default function PikeDiveTracker() {
               </div>
             );
           })()}
+          {/* DD Lookup — quick reference while building a list */}
+          <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${theme.cardBorder}`}}>
+            <div style={{fontSize:11,fontWeight:700,color:theme.text,marginBottom:4}}>🔍 DD Lookup</div>
+            <input placeholder="Search any dive code or name..." value={ddLookup}
+              onChange={e=>setDdLookup(e.target.value)}
+              style={{width:"100%",padding:8,borderRadius:8,border:`1px solid ${theme.cardBorder}`,background:theme.surface,color:theme.text,fontSize:12,boxSizing:"border-box"}}
+            />
+            {ddResults.length > 0 && (
+              <div style={{marginTop:6}}>
+                {ddResults.map(([code, info]) => (
+                  <div key={code} style={{display:"flex",alignItems:"center",gap:6,padding:"4px 0",borderBottom:`1px solid ${theme.cardBorder}`}}>
+                    <span style={{width:6,height:6,borderRadius:"50%",background:GROUP_COLORS[getDiveGroup(code)],flexShrink:0}}/>
+                    <span style={{fontSize:12,fontWeight:700,color:theme.text,width:50}}>{code}</span>
+                    <span style={{fontSize:10,color:theme.textMuted,flex:1}}>{info.name}</span>
+                    <span style={{fontSize:10,fontWeight:600,color:theme.accent}}>1M: {info["1M"]}</span>
+                    <span style={{fontSize:10,fontWeight:600,color:"#a78bfa"}}>3M: {info["3M"]}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* ─── Results by Height ──────────────────────────── */}
@@ -3509,15 +3544,6 @@ export default function PikeDiveTracker() {
       <div style={{padding:16}}>
         {activeTab==="dashboard" && renderDashboard()}
         {activeTab==="stats" && renderDiveStats()}
-        {activeTab==="practice" && (
-          <>
-            <div style={{display:"flex",gap:6,marginBottom:12}}>
-              <button onClick={()=>setPracticeView("log")} style={{flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:practiceView==="log"?theme.accent:theme.surface,color:practiceView==="log"?"#fff":theme.textMuted}}>Practice Log</button>
-              <button onClick={()=>setPracticeView("print")} style={{flex:1,padding:"8px",borderRadius:8,border:"none",cursor:"pointer",fontSize:12,fontWeight:700,background:practiceView==="print"?theme.accent:theme.surface,color:practiceView==="print"?"#fff":theme.textMuted}}>Print Sheet</button>
-            </div>
-            {practiceView==="log" ? renderPracticeLog() : renderPracticePlan()}
-          </>
-        )}
         {activeTab==="compete" && renderCompetition()}
         {activeTab==="recommend" && renderRecommendations()}
       </div>
@@ -3535,9 +3561,6 @@ export default function PikeDiveTracker() {
         </button>
         <button onClick={()=>setActiveTab("stats")} style={tabBtn("stats")}>
           <Icon type="chart" size={16}/> Stats
-        </button>
-        <button onClick={()=>setActiveTab("practice")} style={tabBtn("practice")}>
-          <Icon type="clipboard" size={16}/> Practice
         </button>
         <button onClick={()=>setActiveTab("compete")} style={tabBtn("compete")}>
           <Icon type="trophy" size={16}/> Compete
