@@ -1,0 +1,6 @@
+# macOS Finder metadata
+.DS_Store
+
+# build output & deps
+node_modules/
+dist/
